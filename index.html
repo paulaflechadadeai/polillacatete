@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕵️‍♀️ El Misterio de la Ladrona Áurea</title>
+    <style>
+        :root {
+            --neon-green: #00ff00;
+            --neon-pink: #ff00ff;
+            --neon-blue: #00aaff;
+            --neon-yellow: #ffee00;
+            --bg-dark: #0a0a0a;
+            --bg-darker: #000;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: var(--bg-dark);
+            color: var(--neon-green);
+            line-height: 1.6;
+        }
+
+        .header {
+            border-bottom: 2px dashed var(--neon-pink);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .glitch-title {
+            color: var(--neon-pink);
+            font-size: 1.8em;
+            text-shadow: 2px 0 var(--neon-blue);
+        }
+
+        /* Contenedor principal del juego */
+        .game-screen {
+            background: var(--bg-darker);
+            border: 2px solid var(--neon-green);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+        }
+
+        /* Zona de la imagen */
+        .scene-image {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            border-bottom: 2px solid var(--neon-green);
+            filter: contrast(1.2) sepia(1.1); /* Toque dramático/macabro */
+        }
+
+        /* Zona del texto */
+        .scene-text {
+            padding: 20px;
+            font-size: 1.1em;
+            min-height: 120px;
+            color: #ddd;
+        }
+
+        /* El nombre del personaje que habla */
+        .speaker-name {
+            color: var(--neon-yellow);
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Zona de decisiones (Botones) */
+        .choices-container {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(0, 255, 0, 0.05);
+        }
+
+        .choice-btn {
+            background: transparent;
+            border: 1px dashed var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 12px;
+            font-family: inherit;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .choice-btn:hover {
+            background: var(--neon-blue);
+            color: black;
+            border-style: solid;
+        }
+
+        .volver {
+            display: block;
+            margin-top: 20px;
+            color: var(--neon-pink);
+            text-decoration: none;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1 class="glitch-title">~/archivo_macabro.exe</h1>
+    </div>
+
+    <div class="game-screen">
+        <img id="pantalla-imagen" class="scene-image" src="" alt="Escena">
+        
+        <div class="scene-text">
+            <span id="pantalla-personaje" class="speaker-name"></span>
+            <span id="pantalla-dialogo"></span>
+        </div>
+
+        <div id="pantalla-opciones" class="choices-container">
+            </div>
+    </div>
+
+    <a href="/index.html" class="volver">← ABANDONAR CASO</a>
+
+    <script>
+        // ==========================================
+        // TU GUION (EL MOTOR DEL JUEGO)
+        // ==========================================
+        // Aquí escribes tu historia. Cada "bloque" es una escena.
+        
+        const historia = {
+            
+            "inicio": {
+                personaje: "Detective:",
+                texto: "El rastro de la Ladrona Áurea me trajo a este bosque neblinoso. Dicen que roba secretos, no joyas. De repente, escucho un crujido entre los pinos...",
+                imagen: "imagen1.jpg", // <--- Reemplaza con la ruta de tu foto de cuerpo entero en el bosque
+                opciones: [
+                    { texto: ">> Sacar la linterna e investigar", nodo_siguiente: "encuentro" },
+                    { texto: ">> Esconderse detrás de un árbol", nodo_siguiente: "emboscada" }
+                ]
+            },
+
+            "encuentro": {
+                personaje: "Ladrona Áurea:",
+                texto: "Vaya, vaya... Tienes agallas para seguirme hasta mi territorio, detective. ¿Buscas la unidad de datos encriptada?",
+                imagen: "imagen2.jpg", // <--- Reemplaza con tu foto de cerca sonriendo (la de los guantes negros)
+                opciones: [
+                    { texto: ">> 'Entrégala. Sabes que es peligroso.'", nodo_siguiente: "charla" },
+                    { texto: ">> (Intentar arrebatarle la unidad)", nodo_siguiente: "muerte" }
+                ]
+            },
+
+            "emboscada": {
+                personaje: "Sistema:",
+                texto: "Te escondes, pero ella tiene visión nocturna en esa máscara. Sientes una mano con garras de oro en tu hombro...",
+                imagen: "imagen3.jpg", // <--- Reemplaza con la foto acomodándose el pelo
+                opciones: [
+                    { texto: ">> Darte la vuelta lentamente", nodo_siguiente: "encuentro" }
+                ]
+            },
+
+            "charla": {
+                personaje: "Ladrona Áurea:",
+                texto: "Lo peligroso es dejar que las corporaciones la tengan. Yo libero la información. ¿Te unes a mí, o te quedas del lado aburrido de la ley?",
+                imagen: "imagen3.jpg", 
+                opciones: [
+                    { texto: ">> 'Tienes razón. Rompamos el sistema.'", nodo_siguiente: "final_bueno" },
+                    { texto: ">> 'Soy leal a mi placa. Quedas arrestada.'", nodo_siguiente: "final_malo" }
+                ]
+            },
+
+            "muerte": {
+                personaje: "FIN DEL JUEGO:",
+                texto: "Eres rápido, pero ella es un fantasma. En un parpadeo, te noquea con una descarga eléctrica de sus guantes.",
+                imagen: "imagen1.jpg",
+                opciones: [
+                    { texto: ">> REINICIAR CASO", nodo_siguiente: "inicio" }
+                ]
+            },
+
+            "final_bueno": {
+                personaje: "Ladrona Áurea:",
+                texto: "Buena elección. Prepárate, detective... vamos a quemar el internet del 2026.",
+                imagen: "imagen2.jpg",
+                opciones: [
+                    { texto: ">> JUGAR DE NUEVO", nodo_siguiente: "inicio" }
+                ]
+            },
+
+            "final_malo": {
+                personaje: "Ladrona Áurea:",
+                texto: "Qué decepción. Adiós, detective.",
+                imagen: "imagen1.jpg",
+                opciones: [
+                    { texto: ">> (Ella desaparece en la niebla) - REINICIAR", nodo_siguiente: "inicio" }
+                ]
+            }
+        };
+
+        // ==========================================
+        // CÓDIGO DE FUNCIONAMIENTO (No necesitas tocar esto)
+        // ==========================================
+        
+        function cargarEscena(idEscena) {
+            const escena = historia[idEscena];
+            
+            // Cargar textos e imagen
+            document.getElementById('pantalla-personaje').innerText = escena.personaje;
+            document.getElementById('pantalla-dialogo').innerText = escena.texto;
+            
+            // Truco temporal: Si no pones imagen real aún, dejamos un fondo negro para que no se rompa
+            const imgElement = document.getElementById('pantalla-imagen');
+            if (escena.imagen.includes(".jpg") || escena.imagen.includes(".png")) {
+                imgElement.src = escena.imagen;
+            } else {
+                imgElement.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='350'%3E%3Crect width='100%25' height='100%25' fill='%23111'/%3E%3C/svg%3E";
+            }
+
+            // Limpiar botones anteriores
+            const cajaOpciones = document.getElementById('pantalla-opciones');
+            cajaOpciones.innerHTML = '';
+
+            // Crear botones nuevos
+            escena.opciones.forEach(opcion => {
+                const boton = document.createElement('button');
+                boton.className = 'choice-btn';
+                boton.innerText = opcion.texto;
+                boton.onclick = () => cargarEscena(opcion.nodo_siguiente);
+                cajaOpciones.appendChild(boton);
+            });
+        }
+
+        // Iniciar el juego en el primer nodo
+        window.onload = () => cargarEscena("inicio");
+
+    </script>
+</body>
+</html>
+
