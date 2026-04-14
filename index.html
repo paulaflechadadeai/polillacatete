@@ -215,21 +215,24 @@
 
 <div class="game-screen">
     <div id="sceneContainer" class="scene-container">
-        <img id="pantalla-imagen" class="scene-image" src="" alt="Escena">
+        <img id="pantalla-imagen" class="scene-image" src="https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_0378.jpg" alt="Escena">
     </div>
     <div class="scene-text">
-        <span id="pantalla-personaje" class="speaker-name"></span>
-        <div id="pantalla-dialogo" class="dialogue-line"></div>
+        <span id="pantalla-personaje" class="speaker-name">Detective:</span>
+        <div id="pantalla-dialogo" class="dialogue-line">El rastro de la Ladrona Áurea me trajo a este bosque neblinoso. Dicen que roba secretos, no joyas. De repente, escucho un crujido entre los pinos...</div>
     </div>
-    <div id="pantalla-opciones" class="choices-container"></div>
+    <div id="pantalla-opciones" class="choices-container">
+        <button class="choice-btn" onclick="cargarEscena('encuentro')">>> Sacar la linterna e investigar</button>
+        <button class="choice-btn" onclick="cargarEscena('emboscada')">>> Esconderse detrás de un árbol</button>
+    </div>
 </div>
 
-<div class="volver" id="reiniciarBtn">⟳ REINICIAR CASO</div>
+<div class="volver" id="reiniciarBtn" onclick="reiniciarJuego()">⟳ REINICIAR CASO</div>
 <footer>🎧 Haz clic en cualquier parte para activar sonido | 🔍 Toca los objetos brillantes y arrastra la unidad</footer>
 
 <script>
     // ==========================================
-    // 1. SONIDOS (exactamente igual a tu versión)
+    // 1. SONIDOS
     // ==========================================
     let audioCtx = null;
     let ambientGain = null;
@@ -272,51 +275,91 @@
         oscillator.start();
         noiseNode.connect(ambientGain);
     }
-    function playClickSound() { if (!audioCtx || isMuted) return; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.type = 'triangle'; osc.frequency.value = 80; gain.gain.value = 0.3; gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3); osc.connect(gain); gain.connect(clickGain); osc.start(); osc.stop(audioCtx.currentTime + 0.3); }
-    function playTransitionSound() { if (!audioCtx || isMuted) return; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.type = 'sawtooth'; osc.frequency.value = 120; gain.gain.value = 0.2; gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25); osc.connect(gain); gain.connect(transitionGain); osc.start(); osc.frequency.exponentialRampToValue(40, audioCtx.currentTime + 0.2); osc.stop(audioCtx.currentTime + 0.25); }
-    function setMuted(muted) { isMuted = muted; if(ambientGain) ambientGain.gain.value = muted ? 0 : 0.25; document.getElementById('muteButton').innerText = muted ? '🔇' : '🔊'; }
-    function enableSoundOnUserGesture() { if(soundInitialized) return; if(!audioCtx) initAudio(); if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume().then(()=>{ soundInitialized=true; }); else soundInitialized=true; }
+    
+    function playClickSound() { 
+        if (!audioCtx || isMuted) return; 
+        const osc = audioCtx.createOscillator(); 
+        const gain = audioCtx.createGain(); 
+        osc.type = 'triangle'; 
+        osc.frequency.value = 80; 
+        gain.gain.value = 0.3; 
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3); 
+        osc.connect(gain); 
+        gain.connect(clickGain); 
+        osc.start(); 
+        osc.stop(audioCtx.currentTime + 0.3); 
+    }
+    
+    function playTransitionSound() { 
+        if (!audioCtx || isMuted) return; 
+        const osc = audioCtx.createOscillator(); 
+        const gain = audioCtx.createGain(); 
+        osc.type = 'sawtooth'; 
+        osc.frequency.value = 120; 
+        gain.gain.value = 0.2; 
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25); 
+        osc.connect(gain); 
+        gain.connect(transitionGain); 
+        osc.start(); 
+        osc.frequency.exponentialRampToValue(40, audioCtx.currentTime + 0.2); 
+        osc.stop(audioCtx.currentTime + 0.25); 
+    }
+    
+    function setMuted(muted) { 
+        isMuted = muted; 
+        if(ambientGain) ambientGain.gain.value = muted ? 0 : 0.25; 
+        document.getElementById('muteButton').innerText = muted ? '🔇' : '🔊'; 
+    }
+    
+    function enableSoundOnUserGesture() { 
+        if(soundInitialized) return; 
+        if(!audioCtx) initAudio(); 
+        if(audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume().then(() => { soundInitialized = true; });
+        } else {
+            soundInitialized = true;
+        }
+    }
 
     // ==========================================
     // 2. LÓGICA DEL JUEGO + INTERACCIÓN VISUAL
     // ==========================================
     let determinacion = 50;
     let animacionTimeout = null;
-    let currentSceneId = "";
+    let currentSceneId = "inicio";
     let unidadObtenida = false;
 
-    // Tus imágenes originales (ajusta las rutas si están en otra carpeta)
-    
-   const imagenesReales = {
-    "inicio": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_0378.jpg",
-    "encuentro": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_1614.jpg",
-    "emboscada": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_3277.jpg",
-    "charla": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_0496.jpg",
-    "charla_confianza": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_0496.jpg",
-    "muerte": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_6318.jpg",
-    "final_bueno": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_4882.jpg",
-    "final_malo": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_5314.jpg"
-};
- 
-    // Hotspots y arrastrables por escena
+    const imagenesReales = {
+        "inicio": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_0378.jpg",
+        "encuentro": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_1614.jpg",
+        "emboscada": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_3277.jpg",
+        "charla": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_0496.jpg",
+        "charla_confianza": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_0496.jpg",
+        "muerte": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_6318.jpg",
+        "final_bueno": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_4882.jpg",
+        "final_malo": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_5314.jpg"
+    };
+
     const interaccionesEscena = {
         "inicio": {
             hotspots: [
-                { x: "70%", y: "65%", width: "50px", height: "50px", mensaje: "Un árbol con un símbolo grabado... +5 determinación", efecto: "det+5", accion: ()=>modificarDeterminacion(5) },
-                { x: "20%", y: "30%", width: "40px", height: "40px", mensaje: "Huellas frescas en el suelo. Te dan una pista.", efecto: "info", accion: ()=>mostrarMensaje("Huellas que parecen de botas militares.") }
+                { x: "70%", y: "65%", width: "50px", height: "50px", mensaje: "Un árbol con un símbolo grabado... +5 determinación", efecto: "det+5", accion: () => modificarDeterminacion(5) },
+                { x: "20%", y: "30%", width: "40px", height: "40px", mensaje: "Huellas frescas en el suelo. Te dan una pista.", efecto: "info", accion: () => mostrarMensaje("Huellas que parecen de botas militares.") }
             ],
             draggable: null
         },
         "encuentro": {
             hotspots: [
-                { x: "45%", y: "70%", width: "60px", height: "60px", mensaje: "¡La unidad de datos está en su cinturón!", efecto: "obtener_unidad", accion: ()=>{
+                { x: "45%", y: "70%", width: "60px", height: "60px", mensaje: "¡La unidad de datos está en su cinturón!", efecto: "obtener_unidad", accion: () => {
                     if(!unidadObtenida) {
                         unidadObtenida = true;
                         mostrarMensaje("Has tomado la unidad de datos. ¡Ahora puedes arrastrarla!");
                         modificarDeterminacion(10);
                         crearObjetoArrastrable("encuentro");
-                    } else mostrarMensaje("Ya tienes la unidad.");
-                } }
+                    } else {
+                        mostrarMensaje("Ya tienes la unidad.");
+                    }
+                }}
             ],
             draggable: { id: "unidad", texto: "💾", zonaDestino: { x: "80%", y: "20%", width: "70px", height: "50px", mensajeExito: "Has entregado la unidad a la Ladrona. Ganas su confianza.", efectoExito: "det+15", nodoEspecial: "charla_confianza" } }
         },
@@ -330,12 +373,12 @@
         }
     };
 
-    function mostrarMensaje(texto, duracion=2000) {
+    function mostrarMensaje(texto, duracion = 2000) {
         let div = document.createElement('div');
         div.className = 'mensaje-flotante';
         div.innerText = texto;
         document.body.appendChild(div);
-        setTimeout(()=> div.remove(), duracion);
+        setTimeout(() => div.remove(), duracion);
     }
 
     function modificarDeterminacion(cambio) {
@@ -343,7 +386,10 @@
         actualizarBarraDeterminacion();
         playClickSound();
     }
-    function actualizarBarraDeterminacion() { document.getElementById('determinacionBar').value = determinacion; }
+    
+    function actualizarBarraDeterminacion() { 
+        document.getElementById('determinacionBar').value = determinacion; 
+    }
 
     function limpiarInteractivos() {
         const container = document.getElementById('sceneContainer');
@@ -399,29 +445,32 @@
         container.appendChild(destino);
         
         let offsetX, offsetY, isDragging = false;
-        dragObj.addEventListener('mousedown', startDrag);
-        dragObj.addEventListener('touchstart', startDrag);
         
         function startDrag(e) {
             e.preventDefault();
             isDragging = true;
             const clientX = e.clientX ?? e.touches[0].clientX;
             const clientY = e.clientY ?? e.touches[0].clientY;
-            offsetX = clientX - dragObj.offsetLeft;
-            offsetY = clientY - dragObj.offsetTop;
+            const rect = dragObj.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            offsetX = clientX - rect.left;
+            offsetY = clientY - rect.top;
             window.addEventListener('mousemove', onMouseMove);
             window.addEventListener('mouseup', onMouseUp);
             window.addEventListener('touchmove', onMouseMove);
             window.addEventListener('touchend', onMouseUp);
         }
+        
         function onMouseMove(e) {
             if(!isDragging) return;
             e.preventDefault();
             const clientX = e.clientX ?? e.touches[0].clientX;
             const clientY = e.clientY ?? e.touches[0].clientY;
-            dragObj.style.left = (clientX - offsetX) + 'px';
-            dragObj.style.top = (clientY - offsetY) + 'px';
+            const containerRect = container.getBoundingClientRect();
+            dragObj.style.left = (clientX - containerRect.left - offsetX) + 'px';
+            dragObj.style.top = (clientY - containerRect.top - offsetY) + 'px';
         }
+        
         function onMouseUp(e) {
             if(!isDragging) return;
             isDragging = false;
@@ -438,17 +487,20 @@
                 dragObj.remove();
                 destino.remove();
                 if(data.draggable.zonaDestino.nodoEspecial) {
-                    setTimeout(()=> cargarEscena(data.draggable.zonaDestino.nodoEspecial), 500);
+                    setTimeout(() => cargarEscena(data.draggable.zonaDestino.nodoEspecial), 500);
                 }
             } else {
                 dragObj.style.left = "10%";
                 dragObj.style.top = "80%";
             }
         }
+        
+        dragObj.addEventListener('mousedown', startDrag);
+        dragObj.addEventListener('touchstart', startDrag);
     }
 
     // ==========================================
-    // 3. HISTORIA COMPLETA (con tus textos originales)
+    // 3. HISTORIA COMPLETA
     // ==========================================
     const historia = {
         "inicio": {
@@ -499,27 +551,35 @@
             personaje: "FIN DEL JUEGO:",
             texto: "Eres rápido, pero ella es un fantasma. En un parpadeo, te noquea con una descarga eléctrica de sus guantes.",
             imagen: imagenesReales["muerte"],
-            opciones: [ { texto: ">> REINICIAR CASO", nodo_siguiente: "inicio", determinacion: 0 } ]
+            opciones: [{ texto: ">> REINICIAR CASO", nodo_siguiente: "inicio", determinacion: 0 }]
         },
         "final_bueno": {
             personaje: "Ladrona Áurea:",
             texto: "Buena elección. Prepárate, detective... vamos a quemar el internet del 2026.",
             imagen: imagenesReales["final_bueno"],
-            opciones: [ { texto: ">> JUGAR DE NUEVO", nodo_siguiente: "inicio", determinacion: 0 } ]
+            opciones: [{ texto: ">> JUGAR DE NUEVO", nodo_siguiente: "inicio", determinacion: 0 }]
         },
         "final_malo": {
             personaje: "Ladrona Áurea:",
             texto: "Qué decepción. Adiós, detective.",
             imagen: imagenesReales["final_malo"],
-            opciones: [ { texto: ">> REINICIAR", nodo_siguiente: "inicio", determinacion: 0 } ]
+            opciones: [{ texto: ">> REINICIAR", nodo_siguiente: "inicio", determinacion: 0 }]
         }
     };
 
-    function escribirTexto(elemento, texto, velocidad=25, callback) {
+    function escribirTexto(elemento, texto, velocidad = 25, callback) {
         if(animacionTimeout) clearTimeout(animacionTimeout);
         elemento.innerHTML = "";
-        let i=0;
-        function escribir() { if(i<texto.length) { elemento.innerHTML += texto.charAt(i); i++; animacionTimeout = setTimeout(escribir, velocidad); } else if(callback) callback(); }
+        let i = 0;
+        function escribir() { 
+            if(i < texto.length) { 
+                elemento.innerHTML += texto.charAt(i); 
+                i++; 
+                animacionTimeout = setTimeout(escribir, velocidad); 
+            } else if(callback) {
+                callback();
+            }
+        }
         escribir();
     }
 
@@ -528,12 +588,13 @@
         if(idEscena !== currentSceneId) playTransitionSound();
         currentSceneId = idEscena;
         const escena = historia[idEscena];
-        if(!escena) return;
+        if(!escena) {
+            console.error("Escena no encontrada:", idEscena);
+            return;
+        }
         
-        // Cargar imagen real
         const imgElement = document.getElementById('pantalla-imagen');
         imgElement.src = escena.imagen;
-        imgElement.onerror = () => { console.warn("No se pudo cargar la imagen:", escena.imagen); };
         
         document.getElementById('pantalla-personaje').innerText = escena.personaje;
         escribirTexto(document.getElementById('pantalla-dialogo'), escena.texto, 25);
@@ -554,7 +615,7 @@
         
         limpiarInteractivos();
         crearHotspots(idEscena);
-        // Si estamos en "encuentro" y ya tenemos la unidad, crear el arrastrable (por si se volvió a cargar la escena)
+        
         if(idEscena === "encuentro" && unidadObtenida) {
             crearObjetoArrastrable("encuentro");
         }
@@ -568,11 +629,27 @@
     }
 
     // Eventos
-    document.getElementById('muteButton').addEventListener('click', () => { if(!audioCtx) initAudio(); setMuted(!isMuted); if(!soundInitialized && !isMuted) enableSoundOnUserGesture(); });
-    document.getElementById('reiniciarBtn').addEventListener('click', (e) => { e.preventDefault(); reiniciarJuego(); playClickSound(); });
-    document.body.addEventListener('click', function firstClick() { if(!soundInitialized) { enableSoundOnUserGesture(); if(audioCtx && !isMuted && ambientGain) ambientGain.gain.value = 0.25; document.body.removeEventListener('click', firstClick); } });
+    document.getElementById('muteButton').addEventListener('click', () => { 
+        if(!audioCtx) initAudio(); 
+        setMuted(!isMuted); 
+        if(!soundInitialized && !isMuted) enableSoundOnUserGesture(); 
+    });
     
-    window.onload = () => { actualizarBarraDeterminacion(); cargarEscena("inicio"); initAudio(); };
+    document.body.addEventListener('click', function firstClick() { 
+        if(!soundInitialized) { 
+            enableSoundOnUserGesture(); 
+            if(audioCtx && !isMuted && ambientGain) ambientGain.gain.value = 0.25; 
+            document.body.removeEventListener('click', firstClick); 
+        } 
+    });
+    
+    // Inicializar hotspots al cargar
+    window.onload = () => { 
+        actualizarBarraDeterminacion();
+        initAudio();
+        crearHotspots("inicio");
+    };
 </script>
 </body>
 </html>
+
