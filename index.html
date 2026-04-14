@@ -13,7 +13,9 @@
             --bg-dark: #0a0a0a;
             --bg-darker: #000;
         }
-        * { user-select: none; }
+        * {
+            user-select: none;
+        }
         body {
             font-family: 'Courier New', monospace;
             max-width: 650px;
@@ -115,7 +117,9 @@
             box-shadow: 0 0 10px orange;
             transition: 0.05s linear;
         }
-        .draggable:active { cursor: grabbing; }
+        .draggable:active {
+            cursor: grabbing;
+        }
         .drop-zone {
             position: absolute;
             border: 2px dashed var(--neon-green);
@@ -197,25 +201,9 @@
             70% { opacity: 1; }
             100% { opacity: 0; visibility: hidden; }
         }
-        /* DEBUG PANEL */
-        #debug-panel {
-            position: fixed;
-            top: 5px;
-            right: 5px;
-            background: rgba(255,0,0,0.9);
-            color: white;
-            padding: 10px;
-            font-size: 11px;
-            z-index: 9999;
-            max-width: 200px;
-            border: 2px solid white;
-        }
     </style>
 </head>
 <body>
-
-<!-- DEBUG PANEL -->
-<div id="debug-panel">Cargando...</div>
 
 <div class="header">
     <h1 class="glitch-title">~/archivo_macabro.exe</h1>
@@ -243,13 +231,6 @@
 <footer>🎧 Haz clic en cualquier parte para activar sonido | 🔍 Toca los objetos brillantes y arrastra la unidad</footer>
 
 <script>
-    // DEBUG FUNCTION
-    function debug(msg) {
-        const panel = document.getElementById('debug-panel');
-        panel.innerHTML += '<br>' + msg;
-        console.log(msg);
-    }
-
     // ==========================================
     // 1. SONIDOS
     // ==========================================
@@ -262,79 +243,65 @@
 
     function initAudio() {
         if (audioCtx) return;
-        try {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            ambientGain = audioCtx.createGain();
-            clickGain = audioCtx.createGain();
-            transitionGain = audioCtx.createGain();
-            ambientGain.gain.value = 0.25;
-            clickGain.gain.value = 0.4;
-            transitionGain.gain.value = 0.3;
-            ambientGain.connect(audioCtx.destination);
-            clickGain.connect(audioCtx.destination);
-            transitionGain.connect(audioCtx.destination);
-            
-            const oscillator = audioCtx.createOscillator();
-            oscillator.type = 'sine';
-            oscillator.frequency.value = 55;
-            const noiseNode = (() => {
-                const bufferSize = 4096;
-                const noise = audioCtx.createScriptProcessor(bufferSize, 1, 1);
-                noise.onaudioprocess = function(e) {
-                    const output = e.outputBuffer.getChannelData(0);
-                    for (let i = 0; i < bufferSize; i++) output[i] = (Math.random() * 2 - 1) * 0.15;
-                };
-                return noise;
-            })();
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = 'lowpass';
-            filter.frequency.value = 200;
-            oscillator.connect(ambientGain);
-            noiseNode.connect(filter);
-            filter.connect(ambientGain);
-            oscillator.start();
-            noiseNode.connect(ambientGain);
-            debug('Audio OK');
-        } catch(e) {
-            debug('Audio Error: ' + e.message);
-        }
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        ambientGain = audioCtx.createGain();
+        clickGain = audioCtx.createGain();
+        transitionGain = audioCtx.createGain();
+        ambientGain.gain.value = 0.25;
+        clickGain.gain.value = 0.4;
+        transitionGain.gain.value = 0.3;
+        ambientGain.connect(audioCtx.destination);
+        clickGain.connect(audioCtx.destination);
+        transitionGain.connect(audioCtx.destination);
+        
+        const oscillator = audioCtx.createOscillator();
+        oscillator.type = 'sine';
+        oscillator.frequency.value = 55;
+        const noiseNode = (() => {
+            const bufferSize = 4096;
+            const noise = audioCtx.createScriptProcessor(bufferSize, 1, 1);
+            noise.onaudioprocess = function(e) {
+                const output = e.outputBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) output[i] = (Math.random() * 2 - 1) * 0.15;
+            };
+            return noise;
+        })();
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 200;
+        oscillator.connect(ambientGain);
+        noiseNode.connect(filter);
+        filter.connect(ambientGain);
+        oscillator.start();
+        noiseNode.connect(ambientGain);
     }
     
     function playClickSound() { 
         if (!audioCtx || isMuted) return; 
-        try {
-            const osc = audioCtx.createOscillator(); 
-            const gain = audioCtx.createGain(); 
-            osc.type = 'triangle'; 
-            osc.frequency.value = 80; 
-            gain.gain.value = 0.3; 
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3); 
-            osc.connect(gain); 
-            gain.connect(clickGain); 
-            osc.start(); 
-            osc.stop(audioCtx.currentTime + 0.3);
-        } catch(e) {
-            debug('Click sound error: ' + e.message);
-        }
+        const osc = audioCtx.createOscillator(); 
+        const gain = audioCtx.createGain(); 
+        osc.type = 'triangle'; 
+        osc.frequency.value = 80; 
+        gain.gain.value = 0.3; 
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3); 
+        osc.connect(gain); 
+        gain.connect(clickGain); 
+        osc.start(); 
+        osc.stop(audioCtx.currentTime + 0.3); 
     }
     
     function playTransitionSound() { 
         if (!audioCtx || isMuted) return; 
-        try {
-            const osc = audioCtx.createOscillator(); 
-            const gain = audioCtx.createGain(); 
-            osc.type = 'sawtooth'; 
-            osc.frequency.value = 120; 
-            gain.gain.value = 0.2; 
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25); 
-            osc.connect(gain); 
-            gain.connect(transitionGain); 
-            osc.start(); 
-            osc.frequency.exponentialRampToValue(40, audioCtx.currentTime + 0.2); 
-            osc.stop(audioCtx.currentTime + 0.25);
-        } catch(e) {
-            debug('Transition sound error: ' + e.message);
-        }
+        const osc = audioCtx.createOscillator(); 
+        const gain = audioCtx.createGain(); 
+        osc.type = 'sawtooth'; 
+        osc.frequency.value = 120; 
+        gain.gain.value = 0.2; 
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25); 
+        osc.connect(gain); 
+        gain.connect(transitionGain); 
+        osc.start(); 
+        osc.stop(audioCtx.currentTime + 0.25); 
     }
     
     function setMuted(muted) { 
@@ -347,10 +314,9 @@
         if(soundInitialized) return; 
         if(!audioCtx) initAudio(); 
         if(audioCtx && audioCtx.state === 'suspended') {
-            audioCtx.resume().then(() => { soundInitialized = true; debug('Audio resumed'); });
+            audioCtx.resume().then(() => { soundInitialized = true; });
         } else {
             soundInitialized = true;
-            debug('Audio ready');
         }
     }
 
@@ -485,6 +451,7 @@
             const clientX = e.clientX ?? e.touches[0].clientX;
             const clientY = e.clientY ?? e.touches[0].clientY;
             const rect = dragObj.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
             offsetX = clientX - rect.left;
             offsetY = clientY - rect.top;
             window.addEventListener('mousemove', onMouseMove);
@@ -616,36 +583,14 @@
     }
 
     function cargarEscena(idEscena) {
-        debug('Cargando escena: ' + idEscena);
-        
         if(!soundInitialized) enableSoundOnUserGesture();
         if(idEscena !== currentSceneId) playTransitionSound();
         currentSceneId = idEscena;
         const escena = historia[idEscena];
-        if(!escena) {
-            debug('ERROR: Escena no encontrada: ' + idEscena);
-            return;
-        }
-        
-        debug('Imagen URL: ' + escena.imagen);
+        if(!escena) return;
         
         const imgElement = document.getElementById('pantalla-imagen');
-        
-        // Forzar recarga de imagen
-        imgElement.src = "";
-        
-        setTimeout(() => {
-            imgElement.src = escena.imagen;
-            debug('SRC asignado: ' + escena.imagen);
-        }, 10);
-        
-        imgElement.onload = function() {
-            debug('Imagen cargada OK: ' + idEscena);
-        };
-        
-        imgElement.onerror = function(e) {
-            debug('ERROR imagen: ' + escena.imagen);
-        };
+        imgElement.src = escena.imagen;
         
         document.getElementById('pantalla-personaje').innerText = escena.personaje;
         escribirTexto(document.getElementById('pantalla-dialogo'), escena.texto, 25);
@@ -683,46 +628,29 @@
     // EVENTOS
     // ==========================================
     
-    debug('Iniciando...');
-    
-    // Botón 1: Encuentro (+10 determinación)
-    const btn1 = document.getElementById('btn1');
-    debug('btn1 encontrado: ' + (btn1 ? 'SI' : 'NO'));
-    
-    btn1.addEventListener('click', function() {
-        debug('CLICK btn1');
+    document.getElementById('btn1').addEventListener('click', function() {
         playClickSound();
         modificarDeterminacion(10);
         cargarEscena('encuentro');
     });
     
-    // Botón 2: Emboscada (-5 determinación)
-    const btn2 = document.getElementById('btn2');
-    debug('btn2 encontrado: ' + (btn2 ? 'SI' : 'NO'));
-    
-    btn2.addEventListener('click', function() {
-        debug('CLICK btn2');
+    document.getElementById('btn2').addEventListener('click', function() {
         playClickSound();
         modificarDeterminacion(-5);
         cargarEscena('emboscada');
     });
     
-    // Botón reiniciar
     document.getElementById('reiniciarBtn').addEventListener('click', function() {
-        debug('CLICK reiniciar');
         playClickSound();
         reiniciarJuego();
     });
     
-    // Botón mute
     document.getElementById('muteButton').addEventListener('click', function() { 
-        debug('CLICK mute');
         if(!audioCtx) initAudio(); 
         setMuted(!isMuted); 
         if(!soundInitialized && !isMuted) enableSoundOnUserGesture(); 
     });
     
-    // Activar sonido con primer clic
     document.body.addEventListener('click', function firstClick() { 
         if(!soundInitialized) { 
             enableSoundOnUserGesture(); 
@@ -735,7 +663,6 @@
     actualizarBarraDeterminacion();
     initAudio();
     crearHotspots("inicio");
-    debug('Inicialización completa');
 </script>
 </body>
 </html>
