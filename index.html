@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🕵️‍♀️ El Misterio de la Ladrona Áurea</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>🕵️‍♀️ El Misterio de la Ladrona Áurea | Edición Interactiva</title>
     <style>
         :root {
             --neon-green: #00ff00;
@@ -13,232 +13,565 @@
             --bg-dark: #0a0a0a;
             --bg-darker: #000;
         }
-
+        * {
+            user-select: none;
+        }
         body {
             font-family: 'Courier New', monospace;
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto;
             padding: 20px;
             background: var(--bg-dark);
             color: var(--neon-green);
             line-height: 1.6;
         }
-
         .header {
             border-bottom: 2px dashed var(--neon-pink);
             padding-bottom: 10px;
             margin-bottom: 20px;
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
         }
-
         .glitch-title {
             color: var(--neon-pink);
-            font-size: 1.8em;
+            font-size: 1.5em;
             text-shadow: 2px 0 var(--neon-blue);
+            margin: 0;
         }
-
-        /* Contenedor principal del juego */
+        .stat-bar {
+            background: #111;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--neon-green);
+        }
+        progress {
+            width: 120px;
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        progress::-webkit-progress-bar { background-color: #222; }
+        progress::-webkit-progress-value { background-color: var(--neon-green); }
+        .mute-btn {
+            background: transparent;
+            border: 1px solid var(--neon-yellow);
+            color: var(--neon-yellow);
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 30px;
+        }
         .game-screen {
             background: var(--bg-darker);
             border: 2px solid var(--neon-green);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            position: relative;
         }
-
-        /* Zona de la imagen */
-        .scene-image {
+        .scene-container {
+            position: relative;
             width: 100%;
             height: 350px;
+            background: #000;
+        }
+        .scene-image {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
             border-bottom: 2px solid var(--neon-green);
-            filter: contrast(1.2) sepia(1.1); /* Toque dramático/macabro */
+            filter: contrast(1.1) sepia(0.3);
+            display: block;
         }
-
-        /* Zona del texto */
+        .hotspot {
+            position: absolute;
+            background: rgba(255, 255, 0, 0.3);
+            border: 1px solid yellow;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 0 5px gold;
+        }
+        .hotspot:hover {
+            background: rgba(255, 255, 0, 0.6);
+            transform: scale(1.05);
+        }
+        .draggable {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, gold, darkorange);
+            border-radius: 10px;
+            cursor: grab;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 0 10px orange;
+            transition: 0.05s linear;
+        }
+        .draggable:active {
+            cursor: grabbing;
+        }
+        .drop-zone {
+            position: absolute;
+            border: 2px dashed var(--neon-green);
+            background: rgba(0,255,0,0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--neon-green);
+            pointer-events: auto;
+        }
         .scene-text {
             padding: 20px;
-            font-size: 1.1em;
             min-height: 120px;
-            color: #ddd;
+            background: rgba(0,0,0,0.8);
+            border-top: 1px dashed var(--neon-blue);
         }
-
-        /* El nombre del personaje que habla */
         .speaker-name {
             color: var(--neon-yellow);
             font-weight: bold;
-            margin-bottom: 10px;
             display: block;
+            margin-bottom: 8px;
         }
-
-        /* Zona de decisiones (Botones) */
+        .dialogue-line {
+            color: #ddd;
+            font-size: 1.05em;
+        }
         .choices-container {
             padding: 15px;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            background: rgba(0, 255, 0, 0.05);
+            background: rgba(0, 255, 0, 0.03);
         }
-
         .choice-btn {
             background: transparent;
             border: 1px dashed var(--neon-blue);
             color: var(--neon-blue);
             padding: 12px;
             font-family: inherit;
-            font-size: 1em;
+            font-size: 0.95em;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             text-align: left;
         }
-
         .choice-btn:hover {
             background: var(--neon-blue);
             color: black;
             border-style: solid;
         }
-
         .volver {
             display: block;
             margin-top: 20px;
             color: var(--neon-pink);
             text-decoration: none;
             text-align: center;
+            cursor: pointer;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.7em;
+            opacity: 0.6;
+        }
+        .mensaje-flotante {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: black;
+            border-left: 4px solid var(--neon-green);
+            padding: 8px 15px;
+            font-size: 0.9em;
+            z-index: 100;
+            animation: fadeOut 2s forwards;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1 class="glitch-title">~/archivo_macabro.exe</h1>
+<div class="header">
+    <h1 class="glitch-title">~/archivo_macabro.exe</h1>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <div class="stat-bar">💢 DETERMINACIÓN <progress id="determinacionBar" value="50" max="100"></progress></div>
+        <button id="muteButton" class="mute-btn" title="Silenciar sonidos">🔊</button>
     </div>
+</div>
 
-    <div class="game-screen">
+<div class="game-screen">
+    <div id="sceneContainer" class="scene-container">
         <img id="pantalla-imagen" class="scene-image" src="" alt="Escena">
-        
-        <div class="scene-text">
-            <span id="pantalla-personaje" class="speaker-name"></span>
-            <span id="pantalla-dialogo"></span>
-        </div>
-
-        <div id="pantalla-opciones" class="choices-container">
-            </div>
     </div>
+    <div class="scene-text">
+        <span id="pantalla-personaje" class="speaker-name"></span>
+        <div id="pantalla-dialogo" class="dialogue-line"></div>
+    </div>
+    <div id="pantalla-opciones" class="choices-container"></div>
+</div>
 
-    <a href="/index.html" class="volver">← ABANDONAR CASO</a>
+<div class="volver" id="reiniciarBtn">⟳ REINICIAR CASO</div>
+<footer>🎧 Haz clic en cualquier parte para activar sonido | 🔍 Toca los objetos brillantes y arrastra la unidad</footer>
 
-    <script>
-        // ==========================================
-        // TU GUION (EL MOTOR DEL JUEGO)
-        // ==========================================
-        // Aquí escribes tu historia. Cada "bloque" es una escena.
+<script>
+    // ==========================================
+    // 1. SONIDOS (exactamente igual a tu versión)
+    // ==========================================
+    let audioCtx = null;
+    let ambientGain = null;
+    let clickGain = null;
+    let transitionGain = null;
+    let isMuted = false;
+    let soundInitialized = false;
+
+    function initAudio() {
+        if (audioCtx) return;
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        ambientGain = audioCtx.createGain();
+        clickGain = audioCtx.createGain();
+        transitionGain = audioCtx.createGain();
+        ambientGain.gain.value = 0.25;
+        clickGain.gain.value = 0.4;
+        transitionGain.gain.value = 0.3;
+        ambientGain.connect(audioCtx.destination);
+        clickGain.connect(audioCtx.destination);
+        transitionGain.connect(audioCtx.destination);
         
-        const historia = {
-            
-            "inicio": {
-                personaje: "Detective:",
-                texto: "El rastro de la Ladrona Áurea me trajo a este bosque neblinoso. Dicen que roba secretos, no joyas. De repente, escucho un crujido entre los pinos...",
-                imagen: "img/AndroidVid_0378.jpg", // <--- Reemplaza con la ruta de tu foto de cuerpo entero en el bosque
-                opciones: [
-                    { texto: ">> Sacar la linterna e investigar", nodo_siguiente: "encuentro" },
-                    { texto: ">> Esconderse detrás de un árbol", nodo_siguiente: "emboscada" }
-                ]
-            },
+        const oscillator = audioCtx.createOscillator();
+        oscillator.type = 'sine';
+        oscillator.frequency.value = 55;
+        const noiseNode = (() => {
+            const bufferSize = 4096;
+            const noise = audioCtx.createScriptProcessor(bufferSize, 1, 1);
+            noise.onaudioprocess = function(e) {
+                const output = e.outputBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) output[i] = (Math.random() * 2 - 1) * 0.15;
+            };
+            return noise;
+        })();
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 200;
+        oscillator.connect(ambientGain);
+        noiseNode.connect(filter);
+        filter.connect(ambientGain);
+        oscillator.start();
+        noiseNode.connect(ambientGain);
+    }
+    function playClickSound() { if (!audioCtx || isMuted) return; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.type = 'triangle'; osc.frequency.value = 80; gain.gain.value = 0.3; gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3); osc.connect(gain); gain.connect(clickGain); osc.start(); osc.stop(audioCtx.currentTime + 0.3); }
+    function playTransitionSound() { if (!audioCtx || isMuted) return; const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.type = 'sawtooth'; osc.frequency.value = 120; gain.gain.value = 0.2; gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25); osc.connect(gain); gain.connect(transitionGain); osc.start(); osc.frequency.exponentialRampToValue(40, audioCtx.currentTime + 0.2); osc.stop(audioCtx.currentTime + 0.25); }
+    function setMuted(muted) { isMuted = muted; if(ambientGain) ambientGain.gain.value = muted ? 0 : 0.25; document.getElementById('muteButton').innerText = muted ? '🔇' : '🔊'; }
+    function enableSoundOnUserGesture() { if(soundInitialized) return; if(!audioCtx) initAudio(); if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume().then(()=>{ soundInitialized=true; }); else soundInitialized=true; }
 
-            "encuentro": {
-                personaje: "Ladrona Áurea:",
-                texto: "Vaya, vaya... Tienes agallas para seguirme hasta mi territorio, detective. ¿Buscas la unidad de datos encriptada?",
-                imagen: "img/AndroidVid_1614.jpg", // <--- Reemplaza con tu foto de cerca sonriendo (la de los guantes negros)
-                opciones: [
-                    { texto: ">> 'Entrégala. Sabes que es peligroso.'", nodo_siguiente: "charla" },
-                    { texto: ">> (Intentar arrebatarle la unidad)", nodo_siguiente: "muerte" }
-                ]
-            },
+    // ==========================================
+    // 2. LÓGICA DEL JUEGO + INTERACCIÓN VISUAL
+    // ==========================================
+    let determinacion = 50;
+    let animacionTimeout = null;
+    let currentSceneId = "";
+    let unidadObtenida = false;
 
-            "emboscada": {
-                personaje: "Sistema:",
-                texto: "Te escondes, pero ella tiene visión nocturna en esa máscara. Sientes una mano con garras de oro en tu hombro...",
-                imagen: "img/AndroidVid_3277.jpg", // <--- Reemplaza con la foto acomodándose el pelo
-                opciones: [
-                    { texto: ">> Darte la vuelta lentamente", nodo_siguiente: "encuentro" }
-                ]
-            },
+    // Tus imágenes originales (ajusta las rutas si están en otra carpeta)
+    const imagenesReales = {
+        "inicio": "img/AndroidVid_0378.jpg",
+        "encuentro": "img/AndroidVid_1614.jpg",
+        "emboscada": "img/AndroidVid_3277.jpg",
+        "charla": "img/AndroVid_0496.jpg",
+        "charla_confianza": "img/AndroVid_0496.jpg",  // misma que charla o la que quieras
+        "muerte": "img/AndroVid_6318.jpg",
+        "final_bueno": "img/AndroVid_4882.jpg",
+        "final_malo": "img/AndroidVid_5314.jpg"
+    };
 
-            "charla": {
-                personaje: "Ladrona Áurea:",
-                texto: "Lo peligroso es dejar que las corporaciones la tengan. Yo libero la información. ¿Te unes a mí, o te quedas del lado aburrido de la ley?",
-                imagen: "img/AndroVid_0496.jpg", 
-                opciones: [
-                    { texto: ">> 'Tienes razón. Rompamos el sistema.'", nodo_siguiente: "final_bueno" },
-                    { texto: ">> 'Soy leal a mi placa. Quedas arrestada.'", nodo_siguiente: "final_malo" }
-                ]
-            },
-
-            "muerte": {
-                personaje: "FIN DEL JUEGO:",
-                texto: "Eres rápido, pero ella es un fantasma. En un parpadeo, te noquea con una descarga eléctrica de sus guantes.",
-                imagen: "img/AndroVid_6318.jpg",
-                opciones: [
-                    { texto: ">> REINICIAR CASO", nodo_siguiente: "inicio" }
-                ]
-            },
-
-            "final_bueno": {
-                personaje: "Ladrona Áurea:",
-                texto: "Buena elección. Prepárate, detective... vamos a quemar el internet del 2026.",
-                imagen: "img/AndroVid_4882.jpg",
-                opciones: [
-                    { texto: ">> JUGAR DE NUEVO", nodo_siguiente: "inicio" }
-                ]
-            },
-
-            "final_malo": {
-                personaje: "Ladrona Áurea:",
-                texto: "Qué decepción. Adiós, detective.",
-                imagen: "img/AndroidVid_5314.jpg",
-                opciones: [
-                    { texto: ">> (Ella desaparece en la niebla) - REINICIAR", nodo_siguiente: "inicio" }
-                ]
-            }
-        };
-
-        // ==========================================
-        // CÓDIGO DE FUNCIONAMIENTO (No necesitas tocar esto)
-        // ==========================================
-        
-        function cargarEscena(idEscena) {
-            const escena = historia[idEscena];
-            
-            // Cargar textos e imagen
-            document.getElementById('pantalla-personaje').innerText = escena.personaje;
-            document.getElementById('pantalla-dialogo').innerText = escena.texto;
-            
-            // Truco temporal: Si no pones imagen real aún, dejamos un fondo negro para que no se rompa
-            const imgElement = document.getElementById('pantalla-imagen');
-            if (escena.imagen.includes(".jpg") || escena.imagen.includes(".png")) {
-                imgElement.src = escena.imagen;
-            } else {
-                imgElement.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='350'%3E%3Crect width='100%25' height='100%25' fill='%23111'/%3E%3C/svg%3E";
-            }
-
-            // Limpiar botones anteriores
-            const cajaOpciones = document.getElementById('pantalla-opciones');
-            cajaOpciones.innerHTML = '';
-
-            // Crear botones nuevos
-            escena.opciones.forEach(opcion => {
-                const boton = document.createElement('button');
-                boton.className = 'choice-btn';
-                boton.innerText = opcion.texto;
-                boton.onclick = () => cargarEscena(opcion.nodo_siguiente);
-                cajaOpciones.appendChild(boton);
-            });
+    // Hotspots y arrastrables por escena
+    const interaccionesEscena = {
+        "inicio": {
+            hotspots: [
+                { x: "70%", y: "65%", width: "50px", height: "50px", mensaje: "Un árbol con un símbolo grabado... +5 determinación", efecto: "det+5", accion: ()=>modificarDeterminacion(5) },
+                { x: "20%", y: "30%", width: "40px", height: "40px", mensaje: "Huellas frescas en el suelo. Te dan una pista.", efecto: "info", accion: ()=>mostrarMensaje("Huellas que parecen de botas militares.") }
+            ],
+            draggable: null
+        },
+        "encuentro": {
+            hotspots: [
+                { x: "45%", y: "70%", width: "60px", height: "60px", mensaje: "¡La unidad de datos está en su cinturón!", efecto: "obtener_unidad", accion: ()=>{
+                    if(!unidadObtenida) {
+                        unidadObtenida = true;
+                        mostrarMensaje("Has tomado la unidad de datos. ¡Ahora puedes arrastrarla!");
+                        modificarDeterminacion(10);
+                        crearObjetoArrastrable("encuentro");
+                    } else mostrarMensaje("Ya tienes la unidad.");
+                } }
+            ],
+            draggable: { id: "unidad", texto: "💾", zonaDestino: { x: "80%", y: "20%", width: "70px", height: "50px", mensajeExito: "Has entregado la unidad a la Ladrona. Ganas su confianza.", efectoExito: "det+15", nodoEspecial: "charla_confianza" } }
+        },
+        "charla": {
+            hotspots: [],
+            draggable: null
+        },
+        "charla_confianza": {
+            hotspots: [],
+            draggable: null
         }
+    };
 
-        // Iniciar el juego en el primer nodo
-        window.onload = () => cargarEscena("inicio");
+    function mostrarMensaje(texto, duracion=2000) {
+        let div = document.createElement('div');
+        div.className = 'mensaje-flotante';
+        div.innerText = texto;
+        document.body.appendChild(div);
+        setTimeout(()=> div.remove(), duracion);
+    }
 
-    </script>
+    function modificarDeterminacion(cambio) {
+        determinacion = Math.min(100, Math.max(0, determinacion + cambio));
+        actualizarBarraDeterminacion();
+        playClickSound();
+    }
+    function actualizarBarraDeterminacion() { document.getElementById('determinacionBar').value = determinacion; }
+
+    function limpiarInteractivos() {
+        const container = document.getElementById('sceneContainer');
+        const existing = container.querySelectorAll('.hotspot, .draggable, .drop-zone');
+        existing.forEach(el => el.remove());
+    }
+
+    function crearHotspots(sceneId) {
+        const data = interaccionesEscena[sceneId];
+        if(!data || !data.hotspots) return;
+        const container = document.getElementById('sceneContainer');
+        data.hotspots.forEach(h => {
+            const hotspot = document.createElement('div');
+            hotspot.className = 'hotspot';
+            hotspot.style.left = h.x;
+            hotspot.style.top = h.y;
+            hotspot.style.width = h.width;
+            hotspot.style.height = h.height;
+            hotspot.style.position = 'absolute';
+            hotspot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                playClickSound();
+                if(h.accion) h.accion();
+                mostrarMensaje(h.mensaje);
+            });
+            container.appendChild(hotspot);
+        });
+    }
+
+    function crearObjetoArrastrable(sceneId) {
+        const data = interaccionesEscena[sceneId];
+        if(!data || !data.draggable) return;
+        const container = document.getElementById('sceneContainer');
+        let oldDrag = container.querySelector('.draggable');
+        if(oldDrag) oldDrag.remove();
+        
+        const dragObj = document.createElement('div');
+        dragObj.className = 'draggable';
+        dragObj.id = data.draggable.id;
+        dragObj.innerText = data.draggable.texto;
+        dragObj.style.left = "10%";
+        dragObj.style.top = "80%";
+        dragObj.style.position = 'absolute';
+        container.appendChild(dragObj);
+        
+        const destino = document.createElement('div');
+        destino.className = 'drop-zone';
+        destino.style.left = data.draggable.zonaDestino.x;
+        destino.style.top = data.draggable.zonaDestino.y;
+        destino.style.width = data.draggable.zonaDestino.width;
+        destino.style.height = data.draggable.zonaDestino.height;
+        destino.innerText = "SOLTAR AQUÍ";
+        container.appendChild(destino);
+        
+        let offsetX, offsetY, isDragging = false;
+        dragObj.addEventListener('mousedown', startDrag);
+        dragObj.addEventListener('touchstart', startDrag);
+        
+        function startDrag(e) {
+            e.preventDefault();
+            isDragging = true;
+            const clientX = e.clientX ?? e.touches[0].clientX;
+            const clientY = e.clientY ?? e.touches[0].clientY;
+            offsetX = clientX - dragObj.offsetLeft;
+            offsetY = clientY - dragObj.offsetTop;
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('mouseup', onMouseUp);
+            window.addEventListener('touchmove', onMouseMove);
+            window.addEventListener('touchend', onMouseUp);
+        }
+        function onMouseMove(e) {
+            if(!isDragging) return;
+            e.preventDefault();
+            const clientX = e.clientX ?? e.touches[0].clientX;
+            const clientY = e.clientY ?? e.touches[0].clientY;
+            dragObj.style.left = (clientX - offsetX) + 'px';
+            dragObj.style.top = (clientY - offsetY) + 'px';
+        }
+        function onMouseUp(e) {
+            if(!isDragging) return;
+            isDragging = false;
+            window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('mouseup', onMouseUp);
+            window.removeEventListener('touchmove', onMouseMove);
+            window.removeEventListener('touchend', onMouseUp);
+            const rectDest = destino.getBoundingClientRect();
+            const rectDrag = dragObj.getBoundingClientRect();
+            if(rectDrag.right > rectDest.left && rectDrag.left < rectDest.right && rectDrag.bottom > rectDest.top && rectDrag.top < rectDest.bottom) {
+                playTransitionSound();
+                mostrarMensaje(data.draggable.zonaDestino.mensajeExito);
+                modificarDeterminacion(parseInt(data.draggable.zonaDestino.efectoExito.split('+')[1]) || 0);
+                dragObj.remove();
+                destino.remove();
+                if(data.draggable.zonaDestino.nodoEspecial) {
+                    setTimeout(()=> cargarEscena(data.draggable.zonaDestino.nodoEspecial), 500);
+                }
+            } else {
+                dragObj.style.left = "10%";
+                dragObj.style.top = "80%";
+            }
+        }
+    }
+
+    // ==========================================
+    // 3. HISTORIA COMPLETA (con tus textos originales)
+    // ==========================================
+    const historia = {
+        "inicio": {
+            personaje: "Detective:",
+            texto: "El rastro de la Ladrona Áurea me trajo a este bosque neblinoso. Dicen que roba secretos, no joyas. De repente, escucho un crujido entre los pinos...",
+            imagen: imagenesReales["inicio"],
+            opciones: [
+                { texto: ">> Sacar la linterna e investigar", nodo_siguiente: "encuentro", determinacion: +10 },
+                { texto: ">> Esconderse detrás de un árbol", nodo_siguiente: "emboscada", determinacion: -5 }
+            ]
+        },
+        "encuentro": {
+            personaje: "Ladrona Áurea:",
+            texto: "Vaya, vaya... Tienes agallas para seguirme hasta mi territorio, detective. ¿Buscas la unidad de datos encriptada?",
+            imagen: imagenesReales["encuentro"],
+            opciones: [
+                { texto: ">> 'Entrégala. Sabes que es peligroso.'", nodo_siguiente: "charla", determinacion: 0 },
+                { texto: ">> (Intentar arrebatarle la unidad)", nodo_siguiente: "muerte", determinacion: -20 }
+            ]
+        },
+        "emboscada": {
+            personaje: "Sistema:",
+            texto: "Te escondes, pero ella tiene visión nocturna en esa máscara. Sientes una mano con garras de oro en tu hombro...",
+            imagen: imagenesReales["emboscada"],
+            opciones: [
+                { texto: ">> Darte la vuelta lentamente", nodo_siguiente: "encuentro", determinacion: +5 }
+            ]
+        },
+        "charla": {
+            personaje: "Ladrona Áurea:",
+            texto: "Lo peligroso es dejar que las corporaciones la tengan. Yo libero la información. ¿Te unes a mí, o te quedas del lado aburrido de la ley?",
+            imagen: imagenesReales["charla"],
+            opciones: [
+                { texto: ">> 'Tienes razón. Rompamos el sistema.'", nodo_siguiente: "final_bueno", determinacion: +20 },
+                { texto: ">> 'Soy leal a mi placa. Quedas arrestada.'", nodo_siguiente: "final_malo", determinacion: -30 }
+            ]
+        },
+        "charla_confianza": {
+            personaje: "Ladrona Áurea:",
+            texto: "Has sido astuto al devolverme la unidad sin condiciones. Confío en ti. ¿Quieres unirte a mi causa?",
+            imagen: imagenesReales["charla_confianza"],
+            opciones: [
+                { texto: ">> 'Juntos seremos imparables.'", nodo_siguiente: "final_bueno", determinacion: +30 },
+                { texto: ">> 'Lo siento, no puedo.'", nodo_siguiente: "final_malo", determinacion: -10 }
+            ]
+        },
+        "muerte": {
+            personaje: "FIN DEL JUEGO:",
+            texto: "Eres rápido, pero ella es un fantasma. En un parpadeo, te noquea con una descarga eléctrica de sus guantes.",
+            imagen: imagenesReales["muerte"],
+            opciones: [ { texto: ">> REINICIAR CASO", nodo_siguiente: "inicio", determinacion: 0 } ]
+        },
+        "final_bueno": {
+            personaje: "Ladrona Áurea:",
+            texto: "Buena elección. Prepárate, detective... vamos a quemar el internet del 2026.",
+            imagen: imagenesReales["final_bueno"],
+            opciones: [ { texto: ">> JUGAR DE NUEVO", nodo_siguiente: "inicio", determinacion: 0 } ]
+        },
+        "final_malo": {
+            personaje: "Ladrona Áurea:",
+            texto: "Qué decepción. Adiós, detective.",
+            imagen: imagenesReales["final_malo"],
+            opciones: [ { texto: ">> REINICIAR", nodo_siguiente: "inicio", determinacion: 0 } ]
+        }
+    };
+
+    function escribirTexto(elemento, texto, velocidad=25, callback) {
+        if(animacionTimeout) clearTimeout(animacionTimeout);
+        elemento.innerHTML = "";
+        let i=0;
+        function escribir() { if(i<texto.length) { elemento.innerHTML += texto.charAt(i); i++; animacionTimeout = setTimeout(escribir, velocidad); } else if(callback) callback(); }
+        escribir();
+    }
+
+    function cargarEscena(idEscena) {
+        if(!soundInitialized) enableSoundOnUserGesture();
+        if(idEscena !== currentSceneId) playTransitionSound();
+        currentSceneId = idEscena;
+        const escena = historia[idEscena];
+        if(!escena) return;
+        
+        // Cargar imagen real
+        const imgElement = document.getElementById('pantalla-imagen');
+        imgElement.src = escena.imagen;
+        imgElement.onerror = () => { console.warn("No se pudo cargar la imagen:", escena.imagen); };
+        
+        document.getElementById('pantalla-personaje').innerText = escena.personaje;
+        escribirTexto(document.getElementById('pantalla-dialogo'), escena.texto, 25);
+        
+        const caja = document.getElementById('pantalla-opciones');
+        caja.innerHTML = '';
+        escena.opciones.forEach(op => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.innerText = op.texto;
+            btn.onclick = () => {
+                playClickSound();
+                if(op.determinacion) modificarDeterminacion(op.determinacion);
+                cargarEscena(op.nodo_siguiente);
+            };
+            caja.appendChild(btn);
+        });
+        
+        limpiarInteractivos();
+        crearHotspots(idEscena);
+        // Si estamos en "encuentro" y ya tenemos la unidad, crear el arrastrable (por si se volvió a cargar la escena)
+        if(idEscena === "encuentro" && unidadObtenida) {
+            crearObjetoArrastrable("encuentro");
+        }
+    }
+
+    function reiniciarJuego() {
+        determinacion = 50;
+        unidadObtenida = false;
+        actualizarBarraDeterminacion();
+        cargarEscena("inicio");
+    }
+
+    // Eventos
+    document.getElementById('muteButton').addEventListener('click', () => { if(!audioCtx) initAudio(); setMuted(!isMuted); if(!soundInitialized && !isMuted) enableSoundOnUserGesture(); });
+    document.getElementById('reiniciarBtn').addEventListener('click', (e) => { e.preventDefault(); reiniciarJuego(); playClickSound(); });
+    document.body.addEventListener('click', function firstClick() { if(!soundInitialized) { enableSoundOnUserGesture(); if(audioCtx && !isMuted && ambientGain) ambientGain.gain.value = 0.25; document.body.removeEventListener('click', firstClick); } });
+    
+    window.onload = () => { actualizarBarraDeterminacion(); cargarEscena("inicio"); initAudio(); };
+</script>
 </body>
 </html>
-
