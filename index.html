@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>🕵️‍♀️ El Misterio de la Ladrona Áurea | Edición Interactiva</title>
+    <title>🕵️‍♀️ El Misterio de la Ladrona Áurea | Edición Polilla Animada</title>
     <style>
         :root {
             --neon-green: #00ff00;
@@ -12,18 +12,43 @@
             --neon-yellow: #ffee00;
             --bg-dark: #0a0a0a;
             --bg-darker: #000;
+            --scanline-color: rgba(0, 255, 0, 0.05);
         }
         * {
             user-select: none;
+            box-sizing: border-box;
         }
         body {
             font-family: 'Courier New', monospace;
-            max-width: 650px;
+            max-width: 700px;
             margin: 0 auto;
             padding: 20px;
-            background: var(--bg-dark);
+            background: radial-gradient(circle at 20% 30%, #111, #000);
             color: var(--neon-green);
             line-height: 1.6;
+            position: relative;
+        }
+        /* EFECTO CRT GLOBAL */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, var(--scanline-color) 0px, var(--scanline-color) 2px, transparent 2px, transparent 6px);
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.6;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.9; }
+        }
+        .game-screen {
+            animation: flicker 0.15s infinite;
         }
         .header {
             border-bottom: 2px dashed var(--neon-pink);
@@ -33,12 +58,18 @@
             justify-content: space-between;
             align-items: baseline;
             flex-wrap: wrap;
+            text-shadow: 0 0 3px var(--neon-pink);
         }
         .glitch-title {
             color: var(--neon-pink);
             font-size: 1.5em;
-            text-shadow: 2px 0 var(--neon-blue);
+            text-shadow: 2px 0 var(--neon-blue), -2px 0 var(--neon-green);
             margin: 0;
+            transition: all 0.1s ease;
+        }
+        .glitch-title:hover {
+            text-shadow: 3px 0 cyan, -3px 0 magenta;
+            letter-spacing: 2px;
         }
         .stat-bar {
             background: #111;
@@ -49,6 +80,7 @@
             align-items: center;
             gap: 8px;
             border: 1px solid var(--neon-green);
+            box-shadow: 0 0 5px var(--neon-green);
         }
         progress {
             width: 120px;
@@ -57,7 +89,7 @@
             overflow: hidden;
         }
         progress::-webkit-progress-bar { background-color: #222; }
-        progress::-webkit-progress-value { background-color: var(--neon-green); }
+        progress::-webkit-progress-value { background-color: var(--neon-green); box-shadow: 0 0 4px lime; }
         .mute-btn {
             background: transparent;
             border: 1px solid var(--neon-yellow);
@@ -66,13 +98,19 @@
             cursor: pointer;
             padding: 4px 10px;
             border-radius: 30px;
+            transition: 0.2s;
+        }
+        .mute-btn:hover {
+            background: var(--neon-yellow);
+            color: black;
+            box-shadow: 0 0 8px gold;
         }
         .game-screen {
             background: var(--bg-darker);
             border: 2px solid var(--neon-green);
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4), inset 0 0 10px rgba(0,255,0,0.2);
             position: relative;
         }
         .scene-container {
@@ -80,83 +118,133 @@
             width: 100%;
             height: 350px;
             background: #000;
+            overflow: hidden;
         }
         .scene-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-bottom: 2px solid var(--neon-green);
-            filter: contrast(1.1) sepia(0.3);
+            filter: contrast(1.2) sepia(0.2) brightness(0.9);
             display: block;
+            transition: opacity 0.4s ease-in-out;
         }
+        .fade-transition {
+            opacity: 0;
+        }
+        /* Hotspots con pulso mejorado */
         .hotspot {
             position: absolute;
-            background: rgba(255, 255, 0, 0.3);
-            border: 1px solid yellow;
+            background: rgba(255, 255, 0, 0.2);
+            border: 1px solid gold;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.2s;
             box-shadow: 0 0 5px gold;
+            animation: pulse 1.8s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(255, 215, 0, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
         }
         .hotspot:hover {
             background: rgba(255, 255, 0, 0.6);
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
+        /* Polilla animada (SVG) */
+        .polilla-mascota {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 70px;
+            cursor: pointer;
+            z-index: 25;
+            filter: drop-shadow(0 0 4px lime);
+            transition: filter 0.2s;
+        }
+        .polilla-mascota:hover {
+            filter: drop-shadow(0 0 12px #0f0);
+        }
+        .ala-izq {
+            transform-origin: 28px 32px;
+            animation: aleteo 0.35s infinite alternate ease-in-out;
+        }
+        .ala-der {
+            transform-origin: 52px 32px;
+            animation: aleteo 0.35s infinite alternate ease-in-out 0.05s;
+        }
+        @keyframes aleteo {
+            from { transform: scaleY(1); }
+            to { transform: scaleY(0.6); }
+        }
+        .ojo-polilla {
+            transition: r 0.08s ease;
+        }
+        /* Arrastrable */
         .draggable {
             position: absolute;
-            width: 50px;
-            height: 50px;
+            width: 55px;
+            height: 55px;
             background: radial-gradient(circle, gold, darkorange);
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: grab;
             z-index: 20;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 0 10px orange;
+            font-size: 28px;
+            box-shadow: 0 0 15px orange, inset 0 1px 0 rgba(255,255,200,0.6);
             transition: 0.05s linear;
         }
-        .draggable:active {
-            cursor: grabbing;
-        }
+        .draggable:active { cursor: grabbing; }
         .drop-zone {
             position: absolute;
             border: 2px dashed var(--neon-green);
-            background: rgba(0,255,0,0.2);
+            background: rgba(0,255,0,0.25);
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            color: var(--neon-green);
+            font-size: 11px;
+            font-weight: bold;
+            color: lime;
             pointer-events: auto;
+            backdrop-filter: blur(2px);
+            animation: softGlow 1.2s infinite alternate;
+        }
+        @keyframes softGlow {
+            from { border-color: var(--neon-green); box-shadow: 0 0 2px lime; }
+            to { border-color: #aaffaa; box-shadow: 0 0 10px lime; }
         }
         .scene-text {
             padding: 20px;
-            min-height: 120px;
-            background: rgba(0,0,0,0.8);
+            min-height: 130px;
+            background: rgba(0,0,0,0.85);
             border-top: 1px dashed var(--neon-blue);
+            backdrop-filter: blur(2px);
         }
         .speaker-name {
             color: var(--neon-yellow);
             font-weight: bold;
-            display: block;
             margin-bottom: 8px;
+            text-shadow: 0 0 2px orange;
         }
         .dialogue-line {
-            color: #ddd;
+            color: #e0e0e0;
             font-size: 1.05em;
+            line-height: 1.4;
         }
         .choices-container {
             padding: 15px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            background: rgba(0, 255, 0, 0.03);
+            gap: 12px;
+            background: rgba(0, 255, 0, 0.05);
+            border-top: 1px solid rgba(0,255,0,0.3);
         }
         .choice-btn {
-            background: transparent;
+            background: rgba(0,0,0,0.7);
             border: 1px dashed var(--neon-blue);
             color: var(--neon-blue);
             padding: 12px;
@@ -165,25 +253,33 @@
             cursor: pointer;
             transition: all 0.2s;
             text-align: left;
+            border-radius: 6px;
         }
         .choice-btn:hover {
             background: var(--neon-blue);
             color: black;
             border-style: solid;
+            box-shadow: 0 0 8px cyan;
+            transform: translateX(4px);
         }
         .volver {
             display: block;
             margin-top: 20px;
             color: var(--neon-pink);
-            text-decoration: none;
             text-align: center;
             cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+        .volver:hover {
+            text-shadow: 0 0 5px magenta;
+            letter-spacing: 1px;
         }
         footer {
             text-align: center;
             margin-top: 20px;
             font-size: 0.7em;
-            opacity: 0.6;
+            opacity: 0.7;
         }
         .mensaje-flotante {
             position: fixed;
@@ -195,11 +291,34 @@
             font-size: 0.9em;
             z-index: 100;
             animation: fadeOut 2s forwards;
+            font-family: monospace;
+            box-shadow: 0 0 8px lime;
         }
         @keyframes fadeOut {
-            0% { opacity: 1; }
+            0% { opacity: 1; transform: translateX(0); }
             70% { opacity: 1; }
-            100% { opacity: 0; visibility: hidden; }
+            100% { opacity: 0; visibility: hidden; transform: translateX(-20px); }
+        }
+        .particle-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            background: rgba(100, 255, 100, 0.2);
+            border-radius: 50%;
+            filter: blur(4px);
+            animation: floatParticle 12s infinite alternate ease-in-out;
+        }
+        @keyframes floatParticle {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+            100% { transform: translate(30px, -40px) scale(1.5); opacity: 0.7; }
         }
     </style>
 </head>
@@ -216,6 +335,7 @@
 <div class="game-screen">
     <div id="sceneContainer" class="scene-container">
         <img id="pantalla-imagen" class="scene-image" src="https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_0378.jpg" alt="Escena">
+        <div id="particleCanvas" class="particle-layer"></div>
     </div>
     <div class="scene-text">
         <span id="pantalla-personaje" class="speaker-name">Detective:</span>
@@ -228,7 +348,7 @@
 </div>
 
 <div class="volver" id="reiniciarBtn">⟳ REINICIAR CASO</div>
-<footer>🎧 Haz clic en cualquier parte para activar sonido | 🔍 Toca los objetos brillantes y arrastra la unidad</footer>
+<footer>🎧 Haz clic en cualquier parte para activar sonido | 🔍 Toca objetos brillantes | 🦋 Haz clic en la polilla</footer>
 
 <script>
     // ==========================================
@@ -321,7 +441,154 @@
     }
 
     // ==========================================
-    // 2. LÓGICA DEL JUEGO + INTERACCIÓN VISUAL
+    // 2. PARTÍCULAS Y POLILLA MASCOTA
+    // ==========================================
+    function iniciarParticulas() {
+        const contenedor = document.getElementById('particleCanvas');
+        if(!contenedor) return;
+        contenedor.innerHTML = '';
+        for(let i=0; i<35; i++) {
+            const p = document.createElement('div');
+            p.classList.add('particle');
+            const size = 8 + Math.random() * 18;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            p.style.animationDuration = 8 + Math.random() * 15 + 's';
+            p.style.animationDelay = Math.random() * 8 + 's';
+            p.style.background = `radial-gradient(circle, rgba(80,255,80,0.3), rgba(0,200,100,0.1))`;
+            contenedor.appendChild(p);
+        }
+    }
+
+    // Crear la polilla animada dentro del contenedor de escena
+    function crearPolillaMascota() {
+        const container = document.getElementById('sceneContainer');
+        if (document.querySelector('.polilla-mascota')) return;
+        
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("viewBox", "0 0 80 60");
+        svg.setAttribute("class", "polilla-mascota");
+        svg.style.position = "absolute";
+        svg.style.bottom = "5px";
+        svg.style.right = "5px";
+        svg.style.width = "60px";
+        svg.style.cursor = "pointer";
+        
+        // Cuerpo
+        const cuerpo = document.createElementNS(svgNS, "ellipse");
+        cuerpo.setAttribute("cx", "40");
+        cuerpo.setAttribute("cy", "30");
+        cuerpo.setAttribute("rx", "10");
+        cuerpo.setAttribute("ry", "14");
+        cuerpo.setAttribute("fill", "#4a2e1e");
+        cuerpo.setAttribute("stroke", "#8b5a2b");
+        cuerpo.setAttribute("stroke-width", "1.5");
+        svg.appendChild(cuerpo);
+        
+        // Alas izquierdas
+        const alaIzq = document.createElementNS(svgNS, "g");
+        alaIzq.classList.add("ala-izq");
+        const ala1 = document.createElementNS(svgNS, "ellipse");
+        ala1.setAttribute("cx", "22");
+        ala1.setAttribute("cy", "25");
+        ala1.setAttribute("rx", "18");
+        ala1.setAttribute("ry", "10");
+        ala1.setAttribute("fill", "#7b3f00");
+        ala1.setAttribute("stroke", "#c97e2a");
+        alaIzq.appendChild(ala1);
+        const ala2 = document.createElementNS(svgNS, "ellipse");
+        ala2.setAttribute("cx", "18");
+        ala2.setAttribute("cy", "37");
+        ala2.setAttribute("rx", "14");
+        ala2.setAttribute("ry", "8");
+        ala2.setAttribute("fill", "#9b5a2a");
+        alaIzq.appendChild(ala2);
+        svg.appendChild(alaIzq);
+        
+        // Alas derechas
+        const alaDer = document.createElementNS(svgNS, "g");
+        alaDer.classList.add("ala-der");
+        const ala3 = document.createElementNS(svgNS, "ellipse");
+        ala3.setAttribute("cx", "58");
+        ala3.setAttribute("cy", "25");
+        ala3.setAttribute("rx", "18");
+        ala3.setAttribute("ry", "10");
+        ala3.setAttribute("fill", "#7b3f00");
+        ala3.setAttribute("stroke", "#c97e2a");
+        alaDer.appendChild(ala3);
+        const ala4 = document.createElementNS(svgNS, "ellipse");
+        ala4.setAttribute("cx", "62");
+        ala4.setAttribute("cy", "37");
+        ala4.setAttribute("rx", "14");
+        ala4.setAttribute("ry", "8");
+        ala4.setAttribute("fill", "#9b5a2a");
+        alaDer.appendChild(ala4);
+        svg.appendChild(alaDer);
+        
+        // Ojos
+        const ojoI = document.createElementNS(svgNS, "circle");
+        ojoI.setAttribute("cx", "34");
+        ojoI.setAttribute("cy", "27");
+        ojoI.setAttribute("r", "3");
+        ojoI.setAttribute("fill", "white");
+        ojoI.classList.add("ojo-polilla");
+        svg.appendChild(ojoI);
+        const ojoD = document.createElementNS(svgNS, "circle");
+        ojoD.setAttribute("cx", "46");
+        ojoD.setAttribute("cy", "27");
+        ojoD.setAttribute("r", "3");
+        ojoD.setAttribute("fill", "white");
+        ojoD.classList.add("ojo-polilla");
+        svg.appendChild(ojoD);
+        
+        const pupI = document.createElementNS(svgNS, "circle");
+        pupI.setAttribute("cx", "35");
+        pupI.setAttribute("cy", "28");
+        pupI.setAttribute("r", "1.5");
+        pupI.setAttribute("fill", "black");
+        svg.appendChild(pupI);
+        const pupD = document.createElementNS(svgNS, "circle");
+        pupD.setAttribute("cx", "47");
+        pupD.setAttribute("cy", "28");
+        pupD.setAttribute("r", "1.5");
+        pupD.setAttribute("fill", "black");
+        svg.appendChild(pupD);
+        
+        // Antenas
+        const ant1 = document.createElementNS(svgNS, "path");
+        ant1.setAttribute("d", "M34 20 Q30 12 26 14");
+        ant1.setAttribute("stroke", "#c97e2a");
+        ant1.setAttribute("stroke-width", "1.5");
+        ant1.setAttribute("fill", "none");
+        svg.appendChild(ant1);
+        const ant2 = document.createElementNS(svgNS, "path");
+        ant2.setAttribute("d", "M46 20 Q50 12 54 14");
+        ant2.setAttribute("stroke", "#c97e2a");
+        ant2.setAttribute("stroke-width", "1.5");
+        ant2.setAttribute("fill", "none");
+        svg.appendChild(ant2);
+        
+        container.appendChild(svg);
+        
+        // Interacción: parpadeo al hacer clic
+        const ojos = [ojoI, ojoD];
+        svg.addEventListener('click', (e) => {
+            e.stopPropagation();
+            playClickSound();
+            ojos.forEach(ojo => ojo.setAttribute('r', '1'));
+            mostrarMensaje("🦋 La polilla ha parpadeado... sientes un aura de determinación +5");
+            modificarDeterminacion(5);
+            setTimeout(() => {
+                ojos.forEach(ojo => ojo.setAttribute('r', '3'));
+            }, 150);
+        });
+    }
+
+    // ==========================================
+    // 3. LÓGICA DEL JUEGO
     // ==========================================
     let determinacion = 50;
     let animacionTimeout = null;
@@ -362,14 +629,8 @@
             ],
             draggable: { id: "unidad", texto: "💾", zonaDestino: { x: "80%", y: "20%", width: "70px", height: "50px", mensajeExito: "Has entregado la unidad a la Ladrona. Ganas su confianza.", efectoExito: "det+15", nodoEspecial: "charla_confianza" } }
         },
-        "charla": {
-            hotspots: [],
-            draggable: null
-        },
-        "charla_confianza": {
-            hotspots: [],
-            draggable: null
-        }
+        "charla": { hotspots: [], draggable: null },
+        "charla_confianza": { hotspots: [], draggable: null }
     };
 
     function mostrarMensaje(texto, duracion = 2000) {
@@ -440,7 +701,7 @@
         destino.style.top = data.draggable.zonaDestino.y;
         destino.style.width = data.draggable.zonaDestino.width;
         destino.style.height = data.draggable.zonaDestino.height;
-        destino.innerText = "SOLTAR AQUÍ";
+        destino.innerText = "💾 SOLTAR AQUÍ";
         container.appendChild(destino);
         
         let offsetX, offsetY, isDragging = false;
@@ -499,7 +760,7 @@
     }
 
     // ==========================================
-    // 3. HISTORIA COMPLETA
+    // 4. HISTORIA
     // ==========================================
     const historia = {
         "inicio": {
@@ -590,10 +851,14 @@
         if(!escena) return;
         
         const imgElement = document.getElementById('pantalla-imagen');
-        imgElement.src = escena.imagen;
+        imgElement.classList.add('fade-transition');
+        setTimeout(() => {
+            imgElement.src = escena.imagen;
+            setTimeout(() => imgElement.classList.remove('fade-transition'), 50);
+        }, 180);
         
         document.getElementById('pantalla-personaje').innerText = escena.personaje;
-        escribirTexto(document.getElementById('pantalla-dialogo'), escena.texto, 25);
+        escribirTexto(document.getElementById('pantalla-dialogo'), escena.texto, 22);
         
         const caja = document.getElementById('pantalla-opciones');
         caja.innerHTML = '';
@@ -615,6 +880,9 @@
         if(idEscena === "encuentro" && unidadObtenida) {
             crearObjetoArrastrable("encuentro");
         }
+        
+        // La polilla aparece en todas las escenas (es nuestra mascota)
+        crearPolillaMascota();
     }
 
     function reiniciarJuego() {
@@ -625,9 +893,8 @@
     }
 
     // ==========================================
-    // EVENTOS
+    // EVENTOS E INICIALIZACIÓN
     // ==========================================
-    
     document.getElementById('btn1').addEventListener('click', function() {
         playClickSound();
         modificarDeterminacion(10);
@@ -659,10 +926,10 @@
         } 
     });
     
-    // Inicializar
+    iniciarParticulas();
     actualizarBarraDeterminacion();
     initAudio();
-    crearHotspots("inicio");
+    cargarEscena("inicio");  // Esto ya crea la polilla automáticamente
 </script>
 </body>
-</html>
+    </html>
