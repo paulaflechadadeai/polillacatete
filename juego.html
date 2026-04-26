@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>🕵️‍♀️ El Misterio de la Ladrona Áurea | Edición Ultratumbica</title>
+    <title>🕵️‍♀️ El Misterio de la Ladrona Áurea | Edición Polilla Animada</title>
     <style>
         :root {
             --neon-green: #00ff00;
@@ -12,41 +12,65 @@
             --neon-yellow: #ffee00;
             --bg-dark: #0a0a0a;
             --bg-darker: #000;
+            --scanline-color: rgba(0, 255, 0, 0.05);
         }
-
         * {
             user-select: none;
+            box-sizing: border-box;
         }
-
         body {
             font-family: 'Courier New', monospace;
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
             padding: 20px;
-            background: var(--bg-dark);
+            background: radial-gradient(circle at 20% 30%, #111, #000);
             color: var(--neon-green);
             line-height: 1.6;
+            position: relative;
         }
-
+        /* EFECTO CRT GLOBAL */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, var(--scanline-color) 0px, var(--scanline-color) 2px, transparent 2px, transparent 6px);
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.6;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.9; }
+        }
+        .game-screen {
+            animation: flicker 0.15s infinite;
+        }
         .header {
             border-bottom: 2px dashed var(--neon-pink);
             padding-bottom: 10px;
             margin-bottom: 20px;
-            text-align: center;
             display: flex;
             justify-content: space-between;
             align-items: baseline;
             flex-wrap: wrap;
+            text-shadow: 0 0 3px var(--neon-pink);
         }
-
         .glitch-title {
             color: var(--neon-pink);
             font-size: 1.5em;
-            text-shadow: 2px 0 var(--neon-blue);
+            text-shadow: 2px 0 var(--neon-blue), -2px 0 var(--neon-green);
             margin: 0;
+            transition: all 0.1s ease;
         }
-
-        /* Barra de determinación */
+        .glitch-title:hover {
+            text-shadow: 3px 0 cyan, -3px 0 magenta;
+            letter-spacing: 2px;
+        }
         .stat-bar {
             background: #111;
             padding: 5px 10px;
@@ -56,6 +80,7 @@
             align-items: center;
             gap: 8px;
             border: 1px solid var(--neon-green);
+            box-shadow: 0 0 5px var(--neon-green);
         }
         progress {
             width: 120px;
@@ -64,9 +89,7 @@
             overflow: hidden;
         }
         progress::-webkit-progress-bar { background-color: #222; }
-        progress::-webkit-progress-value { background-color: var(--neon-green); }
-
-        /* Botón mute */
+        progress::-webkit-progress-value { background-color: var(--neon-green); box-shadow: 0 0 4px lime; }
         .mute-btn {
             background: transparent;
             border: 1px solid var(--neon-yellow);
@@ -80,57 +103,148 @@
         .mute-btn:hover {
             background: var(--neon-yellow);
             color: black;
+            box-shadow: 0 0 8px gold;
         }
-
-        /* Pantalla del juego */
         .game-screen {
             background: var(--bg-darker);
             border: 2px solid var(--neon-green);
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4), inset 0 0 10px rgba(0,255,0,0.2);
+            position: relative;
         }
-
-        .scene-image {
+        .scene-container {
+            position: relative;
             width: 100%;
             height: 350px;
+            background: #000;
+            overflow: hidden;
+        }
+        .scene-image {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
             border-bottom: 2px solid var(--neon-green);
-            filter: contrast(1.1) sepia(0.3);
-            background: #000;
+            filter: contrast(1.2) sepia(0.2) brightness(0.9);
+            display: block;
+            transition: opacity 0.4s ease-in-out;
         }
-
+        .fade-transition {
+            opacity: 0;
+        }
+        /* Hotspots con pulso mejorado */
+        .hotspot {
+            position: absolute;
+            background: rgba(255, 255, 0, 0.2);
+            border: 1px solid gold;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 0 5px gold;
+            animation: pulse 1.8s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(255, 215, 0, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        }
+        .hotspot:hover {
+            background: rgba(255, 255, 0, 0.6);
+            transform: scale(1.1);
+        }
+        /* Polilla animada (SVG) */
+        .polilla-mascota {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 70px;
+            cursor: pointer;
+            z-index: 25;
+            filter: drop-shadow(0 0 4px lime);
+            transition: filter 0.2s;
+        }
+        .polilla-mascota:hover {
+            filter: drop-shadow(0 0 12px #0f0);
+        }
+        .ala-izq {
+            transform-origin: 28px 32px;
+            animation: aleteo 0.35s infinite alternate ease-in-out;
+        }
+        .ala-der {
+            transform-origin: 52px 32px;
+            animation: aleteo 0.35s infinite alternate ease-in-out 0.05s;
+        }
+        @keyframes aleteo {
+            from { transform: scaleY(1); }
+            to { transform: scaleY(0.6); }
+        }
+        .ojo-polilla {
+            transition: r 0.08s ease;
+        }
+        /* Arrastrable */
+        .draggable {
+            position: absolute;
+            width: 55px;
+            height: 55px;
+            background: radial-gradient(circle, gold, darkorange);
+            border-radius: 12px;
+            cursor: grab;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 0 15px orange, inset 0 1px 0 rgba(255,255,200,0.6);
+            transition: 0.05s linear;
+        }
+        .draggable:active { cursor: grabbing; }
+        .drop-zone {
+            position: absolute;
+            border: 2px dashed var(--neon-green);
+            background: rgba(0,255,0,0.25);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: lime;
+            pointer-events: auto;
+            backdrop-filter: blur(2px);
+            animation: softGlow 1.2s infinite alternate;
+        }
+        @keyframes softGlow {
+            from { border-color: var(--neon-green); box-shadow: 0 0 2px lime; }
+            to { border-color: #aaffaa; box-shadow: 0 0 10px lime; }
+        }
         .scene-text {
             padding: 20px;
-            min-height: 120px;
-            background: rgba(0,0,0,0.8);
+            min-height: 130px;
+            background: rgba(0,0,0,0.85);
             border-top: 1px dashed var(--neon-blue);
+            backdrop-filter: blur(2px);
         }
-
         .speaker-name {
             color: var(--neon-yellow);
             font-weight: bold;
-            display: block;
             margin-bottom: 8px;
-            letter-spacing: 1px;
+            text-shadow: 0 0 2px orange;
         }
-
         .dialogue-line {
-            color: #ddd;
+            color: #e0e0e0;
             font-size: 1.05em;
-            word-break: break-word;
+            line-height: 1.4;
         }
-
         .choices-container {
             padding: 15px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            background: rgba(0, 255, 0, 0.03);
+            gap: 12px;
+            background: rgba(0, 255, 0, 0.05);
+            border-top: 1px solid rgba(0,255,0,0.3);
         }
-
         .choice-btn {
-            background: transparent;
+            background: rgba(0,0,0,0.7);
             border: 1px dashed var(--neon-blue);
             color: var(--neon-blue);
             padding: 12px;
@@ -139,29 +253,72 @@
             cursor: pointer;
             transition: all 0.2s;
             text-align: left;
+            border-radius: 6px;
         }
-
         .choice-btn:hover {
             background: var(--neon-blue);
             color: black;
             border-style: solid;
-            transform: scale(1.01);
+            box-shadow: 0 0 8px cyan;
+            transform: translateX(4px);
         }
-
         .volver {
             display: block;
             margin-top: 20px;
             color: var(--neon-pink);
-            text-decoration: none;
             text-align: center;
-            font-size: 0.9em;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.2s;
         }
-
+        .volver:hover {
+            text-shadow: 0 0 5px magenta;
+            letter-spacing: 1px;
+        }
         footer {
             text-align: center;
             margin-top: 20px;
             font-size: 0.7em;
-            opacity: 0.6;
+            opacity: 0.7;
+        }
+        .mensaje-flotante {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: black;
+            border-left: 4px solid var(--neon-green);
+            padding: 8px 15px;
+            font-size: 0.9em;
+            z-index: 100;
+            animation: fadeOut 2s forwards;
+            font-family: monospace;
+            box-shadow: 0 0 8px lime;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: translateX(0); }
+            70% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; transform: translateX(-20px); }
+        }
+        .particle-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            background: rgba(100, 255, 100, 0.2);
+            border-radius: 50%;
+            filter: blur(4px);
+            animation: floatParticle 12s infinite alternate ease-in-out;
+        }
+        @keyframes floatParticle {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+            100% { transform: translate(30px, -40px) scale(1.5); opacity: 0.7; }
         }
     </style>
 </head>
@@ -176,20 +333,26 @@
 </div>
 
 <div class="game-screen">
-    <img id="pantalla-imagen" class="scene-image" src="" alt="Escena">
-    <div class="scene-text">
-        <span id="pantalla-personaje" class="speaker-name"></span>
-        <div id="pantalla-dialogo" class="dialogue-line"></div>
+    <div id="sceneContainer" class="scene-container">
+        <img id="pantalla-imagen" class="scene-image" src="https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_0378.jpg" alt="Escena">
+        <div id="particleCanvas" class="particle-layer"></div>
     </div>
-    <div id="pantalla-opciones" class="choices-container"></div>
+    <div class="scene-text">
+        <span id="pantalla-personaje" class="speaker-name">Detective:</span>
+        <div id="pantalla-dialogo" class="dialogue-line">El rastro de la Ladrona Áurea me trajo a este bosque neblinoso. Dicen que roba secretos, no joyas. De repente, escucho un crujido entre los pinos...</div>
+    </div>
+    <div id="pantalla-opciones" class="choices-container">
+        <button class="choice-btn" id="btn1">>> Sacar la linterna e investigar</button>
+        <button class="choice-btn" id="btn2">>> Esconderse detrás de un árbol</button>
+    </div>
 </div>
 
-<a href="#" class="volver" id="reiniciarBtn">⟳ REINICIAR CASO</a>
-<footer>🎧 Sonido ambiente activo al primer clic | 🔇 botón mute</footer>
+<div class="volver" id="reiniciarBtn">⟳ REINICIAR CASO</div>
+<footer>🎧 Haz clic en cualquier parte para activar sonido | 🔍 Toca objetos brillantes | 🦋 Haz clic en la polilla</footer>
 
 <script>
     // ==========================================
-    // 1. SONIDOS ULTRATUMBICOS CON WEB AUDIO (sin archivos externos)
+    // 1. SONIDOS
     // ==========================================
     let audioCtx = null;
     let ambientGain = null;
@@ -201,118 +364,409 @@
     function initAudio() {
         if (audioCtx) return;
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
-        // Nodos de ganancia para control individual
         ambientGain = audioCtx.createGain();
         clickGain = audioCtx.createGain();
         transitionGain = audioCtx.createGain();
-        
-        ambientGain.gain.value = 0.25;   // Volumen ambiente bajo
+        ambientGain.gain.value = 0.25;
         clickGain.gain.value = 0.4;
         transitionGain.gain.value = 0.3;
-        
-        // Conectar a destino
         ambientGain.connect(audioCtx.destination);
         clickGain.connect(audioCtx.destination);
         transitionGain.connect(audioCtx.destination);
         
-        // 1.1 Ambiente: onda sinusoidal grave + ruido (loop manual)
-        const now = audioCtx.currentTime;
         const oscillator = audioCtx.createOscillator();
         oscillator.type = 'sine';
-        oscillator.frequency.value = 55; // Do grave
-        
+        oscillator.frequency.value = 55;
         const noiseNode = (() => {
             const bufferSize = 4096;
             const noise = audioCtx.createScriptProcessor(bufferSize, 1, 1);
             noise.onaudioprocess = function(e) {
                 const output = e.outputBuffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) {
-                    output[i] = (Math.random() * 2 - 1) * 0.15;
-                }
+                for (let i = 0; i < bufferSize; i++) output[i] = (Math.random() * 2 - 1) * 0.15;
             };
             return noise;
         })();
-        
         const filter = audioCtx.createBiquadFilter();
         filter.type = 'lowpass';
         filter.frequency.value = 200;
-        
         oscillator.connect(ambientGain);
         noiseNode.connect(filter);
         filter.connect(ambientGain);
-        
         oscillator.start();
         noiseNode.connect(ambientGain);
-        // Loop infinito: no paramos nunca
     }
     
-    function playClickSound() {
-        if (!audioCtx || isMuted) return;
-        const now = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.value = 80;
-        gain.gain.value = 0.3;
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
-        osc.connect(gain);
-        gain.connect(clickGain);
-        osc.start();
-        osc.stop(now + 0.3);
+    function playClickSound() { 
+        if (!audioCtx || isMuted) return; 
+        const osc = audioCtx.createOscillator(); 
+        const gain = audioCtx.createGain(); 
+        osc.type = 'triangle'; 
+        osc.frequency.value = 80; 
+        gain.gain.value = 0.3; 
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3); 
+        osc.connect(gain); 
+        gain.connect(clickGain); 
+        osc.start(); 
+        osc.stop(audioCtx.currentTime + 0.3); 
     }
     
-    function playTransitionSound() {
-        if (!audioCtx || isMuted) return;
-        const now = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.value = 120;
-        gain.gain.value = 0.2;
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
-        osc.connect(gain);
-        gain.connect(transitionGain);
-        osc.start();
-        osc.frequency.exponentialRampToValue(40, now + 0.2);
-        osc.stop(now + 0.25);
+    function playTransitionSound() { 
+        if (!audioCtx || isMuted) return; 
+        const osc = audioCtx.createOscillator(); 
+        const gain = audioCtx.createGain(); 
+        osc.type = 'sawtooth'; 
+        osc.frequency.value = 120; 
+        gain.gain.value = 0.2; 
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25); 
+        osc.connect(gain); 
+        gain.connect(transitionGain); 
+        osc.start(); 
+        osc.stop(audioCtx.currentTime + 0.25); 
     }
     
-    function setMuted(muted) {
-        isMuted = muted;
-        if (!audioCtx) return;
-        const val = muted ? 0 : 1;
-        if (ambientGain) ambientGain.gain.value = muted ? 0 : 0.25;
-        // No muteamos click/transition individualmente, pero el botón cambia el ícono
-        const btn = document.getElementById('muteButton');
-        if (btn) btn.innerText = muted ? '🔇' : '🔊';
+    function setMuted(muted) { 
+        isMuted = muted; 
+        if(ambientGain) ambientGain.gain.value = muted ? 0 : 0.25; 
+        document.getElementById('muteButton').innerText = muted ? '🔇' : '🔊'; 
     }
     
-    // Iniciar sonido en la primera interacción del usuario (obligatorio por políticas del navegador)
-    function enableSoundOnUserGesture() {
-        if (soundInitialized) return;
-        if (!audioCtx) initAudio();
-        if (audioCtx && audioCtx.state === 'suspended') {
-            audioCtx.resume().then(() => {
-                soundInitialized = true;
-                console.log("Sonido activado");
-            }).catch(e => console.warn);
+    function enableSoundOnUserGesture() { 
+        if(soundInitialized) return; 
+        if(!audioCtx) initAudio(); 
+        if(audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume().then(() => { soundInitialized = true; });
         } else {
             soundInitialized = true;
         }
     }
-    
+
     // ==========================================
-    // 2. LÓGICA DEL JUEGO (historia + determinación + animación de texto)
+    // 2. PARTÍCULAS Y POLILLA MASCOTA
+    // ==========================================
+    function iniciarParticulas() {
+        const contenedor = document.getElementById('particleCanvas');
+        if(!contenedor) return;
+        contenedor.innerHTML = '';
+        for(let i=0; i<35; i++) {
+            const p = document.createElement('div');
+            p.classList.add('particle');
+            const size = 8 + Math.random() * 18;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            p.style.animationDuration = 8 + Math.random() * 15 + 's';
+            p.style.animationDelay = Math.random() * 8 + 's';
+            p.style.background = `radial-gradient(circle, rgba(80,255,80,0.3), rgba(0,200,100,0.1))`;
+            contenedor.appendChild(p);
+        }
+    }
+
+    // Crear la polilla animada dentro del contenedor de escena
+    function crearPolillaMascota() {
+        const container = document.getElementById('sceneContainer');
+        if (document.querySelector('.polilla-mascota')) return;
+        
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("viewBox", "0 0 80 60");
+        svg.setAttribute("class", "polilla-mascota");
+        svg.style.position = "absolute";
+        svg.style.bottom = "5px";
+        svg.style.right = "5px";
+        svg.style.width = "60px";
+        svg.style.cursor = "pointer";
+        
+        // Cuerpo
+        const cuerpo = document.createElementNS(svgNS, "ellipse");
+        cuerpo.setAttribute("cx", "40");
+        cuerpo.setAttribute("cy", "30");
+        cuerpo.setAttribute("rx", "10");
+        cuerpo.setAttribute("ry", "14");
+        cuerpo.setAttribute("fill", "#4a2e1e");
+        cuerpo.setAttribute("stroke", "#8b5a2b");
+        cuerpo.setAttribute("stroke-width", "1.5");
+        svg.appendChild(cuerpo);
+        
+        // Alas izquierdas
+        const alaIzq = document.createElementNS(svgNS, "g");
+        alaIzq.classList.add("ala-izq");
+        const ala1 = document.createElementNS(svgNS, "ellipse");
+        ala1.setAttribute("cx", "22");
+        ala1.setAttribute("cy", "25");
+        ala1.setAttribute("rx", "18");
+        ala1.setAttribute("ry", "10");
+        ala1.setAttribute("fill", "#7b3f00");
+        ala1.setAttribute("stroke", "#c97e2a");
+        alaIzq.appendChild(ala1);
+        const ala2 = document.createElementNS(svgNS, "ellipse");
+        ala2.setAttribute("cx", "18");
+        ala2.setAttribute("cy", "37");
+        ala2.setAttribute("rx", "14");
+        ala2.setAttribute("ry", "8");
+        ala2.setAttribute("fill", "#9b5a2a");
+        alaIzq.appendChild(ala2);
+        svg.appendChild(alaIzq);
+        
+        // Alas derechas
+        const alaDer = document.createElementNS(svgNS, "g");
+        alaDer.classList.add("ala-der");
+        const ala3 = document.createElementNS(svgNS, "ellipse");
+        ala3.setAttribute("cx", "58");
+        ala3.setAttribute("cy", "25");
+        ala3.setAttribute("rx", "18");
+        ala3.setAttribute("ry", "10");
+        ala3.setAttribute("fill", "#7b3f00");
+        ala3.setAttribute("stroke", "#c97e2a");
+        alaDer.appendChild(ala3);
+        const ala4 = document.createElementNS(svgNS, "ellipse");
+        ala4.setAttribute("cx", "62");
+        ala4.setAttribute("cy", "37");
+        ala4.setAttribute("rx", "14");
+        ala4.setAttribute("ry", "8");
+        ala4.setAttribute("fill", "#9b5a2a");
+        alaDer.appendChild(ala4);
+        svg.appendChild(alaDer);
+        
+        // Ojos
+        const ojoI = document.createElementNS(svgNS, "circle");
+        ojoI.setAttribute("cx", "34");
+        ojoI.setAttribute("cy", "27");
+        ojoI.setAttribute("r", "3");
+        ojoI.setAttribute("fill", "white");
+        ojoI.classList.add("ojo-polilla");
+        svg.appendChild(ojoI);
+        const ojoD = document.createElementNS(svgNS, "circle");
+        ojoD.setAttribute("cx", "46");
+        ojoD.setAttribute("cy", "27");
+        ojoD.setAttribute("r", "3");
+        ojoD.setAttribute("fill", "white");
+        ojoD.classList.add("ojo-polilla");
+        svg.appendChild(ojoD);
+        
+        const pupI = document.createElementNS(svgNS, "circle");
+        pupI.setAttribute("cx", "35");
+        pupI.setAttribute("cy", "28");
+        pupI.setAttribute("r", "1.5");
+        pupI.setAttribute("fill", "black");
+        svg.appendChild(pupI);
+        const pupD = document.createElementNS(svgNS, "circle");
+        pupD.setAttribute("cx", "47");
+        pupD.setAttribute("cy", "28");
+        pupD.setAttribute("r", "1.5");
+        pupD.setAttribute("fill", "black");
+        svg.appendChild(pupD);
+        
+        // Antenas
+        const ant1 = document.createElementNS(svgNS, "path");
+        ant1.setAttribute("d", "M34 20 Q30 12 26 14");
+        ant1.setAttribute("stroke", "#c97e2a");
+        ant1.setAttribute("stroke-width", "1.5");
+        ant1.setAttribute("fill", "none");
+        svg.appendChild(ant1);
+        const ant2 = document.createElementNS(svgNS, "path");
+        ant2.setAttribute("d", "M46 20 Q50 12 54 14");
+        ant2.setAttribute("stroke", "#c97e2a");
+        ant2.setAttribute("stroke-width", "1.5");
+        ant2.setAttribute("fill", "none");
+        svg.appendChild(ant2);
+        
+        container.appendChild(svg);
+        
+        // Interacción: parpadeo al hacer clic
+        const ojos = [ojoI, ojoD];
+        svg.addEventListener('click', (e) => {
+            e.stopPropagation();
+            playClickSound();
+            ojos.forEach(ojo => ojo.setAttribute('r', '1'));
+            mostrarMensaje("🦋 La polilla ha parpadeado... sientes un aura de determinación +5");
+            modificarDeterminacion(5);
+            setTimeout(() => {
+                ojos.forEach(ojo => ojo.setAttribute('r', '3'));
+            }, 150);
+        });
+    }
+
+    // ==========================================
+    // 3. LÓGICA DEL JUEGO
     // ==========================================
     let determinacion = 50;
     let animacionTimeout = null;
+    let currentSceneId = "inicio";
+    let unidadObtenida = false;
+
+    const imagenesReales = {
+        "inicio": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_0378.jpg",
+        "encuentro": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_1614.jpg",
+        "emboscada": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_3277.jpg",
+        "charla": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_0496.jpg",
+        "charla_confianza": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_0496.jpg",
+        "muerte": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_6318.jpg",
+        "final_bueno": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_4882.jpg",
+        "final_malo": "https://paulaflechadadeai.github.io/polillacatete/img/AndroVid_5314.jpg"
+    };
+
+    const interaccionesEscena = {
+        "inicio": {
+            hotspots: [
+                { x: "70%", y: "65%", width: "50px", height: "50px", mensaje: "Un árbol con un símbolo grabado... +5 determinación", efecto: "det+5", accion: () => modificarDeterminacion(5) },
+                { x: "20%", y: "30%", width: "40px", height: "40px", mensaje: "Huellas frescas en el suelo. Te dan una pista.", efecto: "info", accion: () => mostrarMensaje("Huellas que parecen de botas militares.") }
+            ],
+            draggable: null
+        },
+        "encuentro": {
+            hotspots: [
+                { x: "45%", y: "70%", width: "60px", height: "60px", mensaje: "¡La unidad de datos está en su cinturón!", efecto: "obtener_unidad", accion: () => {
+                    if(!unidadObtenida) {
+                        unidadObtenida = true;
+                        mostrarMensaje("Has tomado la unidad de datos. ¡Ahora puedes arrastrarla!");
+                        modificarDeterminacion(10);
+                        crearObjetoArrastrable("encuentro");
+                    } else {
+                        mostrarMensaje("Ya tienes la unidad.");
+                    }
+                }}
+            ],
+            draggable: { id: "unidad", texto: "💾", zonaDestino: { x: "80%", y: "20%", width: "70px", height: "50px", mensajeExito: "Has entregado la unidad a la Ladrona. Ganas su confianza.", efectoExito: "det+15", nodoEspecial: "charla_confianza" } }
+        },
+        "charla": { hotspots: [], draggable: null },
+        "charla_confianza": { hotspots: [], draggable: null }
+    };
+
+    function mostrarMensaje(texto, duracion = 2000) {
+        let div = document.createElement('div');
+        div.className = 'mensaje-flotante';
+        div.innerText = texto;
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), duracion);
+    }
+
+    function modificarDeterminacion(cambio) {
+        determinacion = Math.min(100, Math.max(0, determinacion + cambio));
+        actualizarBarraDeterminacion();
+        playClickSound();
+    }
     
+    function actualizarBarraDeterminacion() { 
+        document.getElementById('determinacionBar').value = determinacion; 
+    }
+
+    function limpiarInteractivos() {
+        const container = document.getElementById('sceneContainer');
+        const existing = container.querySelectorAll('.hotspot, .draggable, .drop-zone');
+        existing.forEach(el => el.remove());
+    }
+
+    function crearHotspots(sceneId) {
+        const data = interaccionesEscena[sceneId];
+        if(!data || !data.hotspots) return;
+        const container = document.getElementById('sceneContainer');
+        data.hotspots.forEach(h => {
+            const hotspot = document.createElement('div');
+            hotspot.className = 'hotspot';
+            hotspot.style.left = h.x;
+            hotspot.style.top = h.y;
+            hotspot.style.width = h.width;
+            hotspot.style.height = h.height;
+            hotspot.style.position = 'absolute';
+            hotspot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                playClickSound();
+                if(h.accion) h.accion();
+                mostrarMensaje(h.mensaje);
+            });
+            container.appendChild(hotspot);
+        });
+    }
+
+    function crearObjetoArrastrable(sceneId) {
+        const data = interaccionesEscena[sceneId];
+        if(!data || !data.draggable) return;
+        const container = document.getElementById('sceneContainer');
+        let oldDrag = container.querySelector('.draggable');
+        if(oldDrag) oldDrag.remove();
+        
+        const dragObj = document.createElement('div');
+        dragObj.className = 'draggable';
+        dragObj.id = data.draggable.id;
+        dragObj.innerText = data.draggable.texto;
+        dragObj.style.left = "10%";
+        dragObj.style.top = "80%";
+        dragObj.style.position = 'absolute';
+        container.appendChild(dragObj);
+        
+        const destino = document.createElement('div');
+        destino.className = 'drop-zone';
+        destino.style.left = data.draggable.zonaDestino.x;
+        destino.style.top = data.draggable.zonaDestino.y;
+        destino.style.width = data.draggable.zonaDestino.width;
+        destino.style.height = data.draggable.zonaDestino.height;
+        destino.innerText = "💾 SOLTAR AQUÍ";
+        container.appendChild(destino);
+        
+        let offsetX, offsetY, isDragging = false;
+        
+        function startDrag(e) {
+            e.preventDefault();
+            isDragging = true;
+            const clientX = e.clientX ?? e.touches[0].clientX;
+            const clientY = e.clientY ?? e.touches[0].clientY;
+            const rect = dragObj.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            offsetX = clientX - rect.left;
+            offsetY = clientY - rect.top;
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('mouseup', onMouseUp);
+            window.addEventListener('touchmove', onMouseMove);
+            window.addEventListener('touchend', onMouseUp);
+        }
+        
+        function onMouseMove(e) {
+            if(!isDragging) return;
+            e.preventDefault();
+            const clientX = e.clientX ?? e.touches[0].clientX;
+            const clientY = e.clientY ?? e.touches[0].clientY;
+            const containerRect = container.getBoundingClientRect();
+            dragObj.style.left = (clientX - containerRect.left - offsetX) + 'px';
+            dragObj.style.top = (clientY - containerRect.top - offsetY) + 'px';
+        }
+        
+        function onMouseUp(e) {
+            if(!isDragging) return;
+            isDragging = false;
+            window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('mouseup', onMouseUp);
+            window.removeEventListener('touchmove', onMouseMove);
+            window.removeEventListener('touchend', onMouseUp);
+            const rectDest = destino.getBoundingClientRect();
+            const rectDrag = dragObj.getBoundingClientRect();
+            if(rectDrag.right > rectDest.left && rectDrag.left < rectDest.right && rectDrag.bottom > rectDest.top && rectDrag.top < rectDest.bottom) {
+                playTransitionSound();
+                mostrarMensaje(data.draggable.zonaDestino.mensajeExito);
+                modificarDeterminacion(parseInt(data.draggable.zonaDestino.efectoExito.split('+')[1]) || 0);
+                dragObj.remove();
+                destino.remove();
+                if(data.draggable.zonaDestino.nodoEspecial) {
+                    setTimeout(() => cargarEscena(data.draggable.zonaDestino.nodoEspecial), 500);
+                }
+            } else {
+                dragObj.style.left = "10%";
+                dragObj.style.top = "80%";
+            }
+        }
+        
+        dragObj.addEventListener('mousedown', startDrag);
+        dragObj.addEventListener('touchstart', startDrag);
+    }
+
+    // ==========================================
+    // 4. HISTORIA
+    // ==========================================
     const historia = {
         "inicio": {
             personaje: "Detective:",
             texto: "El rastro de la Ladrona Áurea me trajo a este bosque neblinoso. Dicen que roba secretos, no joyas. De repente, escucho un crujido entre los pinos...",
-            imagen: "imagen1.jpg", // <-- Cambia por tu GIF o JPG
+            imagen: imagenesReales["inicio"],
             opciones: [
                 { texto: ">> Sacar la linterna e investigar", nodo_siguiente: "encuentro", determinacion: +10 },
                 { texto: ">> Esconderse detrás de un árbol", nodo_siguiente: "emboscada", determinacion: -5 }
@@ -321,7 +775,7 @@
         "encuentro": {
             personaje: "Ladrona Áurea:",
             texto: "Vaya, vaya... Tienes agallas para seguirme hasta mi territorio, detective. ¿Buscas la unidad de datos encriptada?",
-            imagen: "imagen2.jpg",
+            imagen: imagenesReales["encuentro"],
             opciones: [
                 { texto: ">> 'Entrégala. Sabes que es peligroso.'", nodo_siguiente: "charla", determinacion: 0 },
                 { texto: ">> (Intentar arrebatarle la unidad)", nodo_siguiente: "muerte", determinacion: -20 }
@@ -330,7 +784,7 @@
         "emboscada": {
             personaje: "Sistema:",
             texto: "Te escondes, pero ella tiene visión nocturna en esa máscara. Sientes una mano con garras de oro en tu hombro...",
-            imagen: "imagen3.jpg",
+            imagen: imagenesReales["emboscada"],
             opciones: [
                 { texto: ">> Darte la vuelta lentamente", nodo_siguiente: "encuentro", determinacion: +5 }
             ]
@@ -338,161 +792,144 @@
         "charla": {
             personaje: "Ladrona Áurea:",
             texto: "Lo peligroso es dejar que las corporaciones la tengan. Yo libero la información. ¿Te unes a mí, o te quedas del lado aburrido de la ley?",
-            imagen: "imagen3.jpg",
+            imagen: imagenesReales["charla"],
             opciones: [
                 { texto: ">> 'Tienes razón. Rompamos el sistema.'", nodo_siguiente: "final_bueno", determinacion: +20 },
                 { texto: ">> 'Soy leal a mi placa. Quedas arrestada.'", nodo_siguiente: "final_malo", determinacion: -30 }
             ]
         },
+        "charla_confianza": {
+            personaje: "Ladrona Áurea:",
+            texto: "Has sido astuto al devolverme la unidad sin condiciones. Confío en ti. ¿Quieres unirte a mi causa?",
+            imagen: imagenesReales["charla_confianza"],
+            opciones: [
+                { texto: ">> 'Juntos seremos imparables.'", nodo_siguiente: "final_bueno", determinacion: +30 },
+                { texto: ">> 'Lo siento, no puedo.'", nodo_siguiente: "final_malo", determinacion: -10 }
+            ]
+        },
         "muerte": {
             personaje: "FIN DEL JUEGO:",
             texto: "Eres rápido, pero ella es un fantasma. En un parpadeo, te noquea con una descarga eléctrica de sus guantes.",
-            imagen: "imagen1.jpg",
-            opciones: [
-                { texto: ">> REINICIAR CASO", nodo_siguiente: "inicio", determinacion: 0 }
-            ]
+            imagen: imagenesReales["muerte"],
+            opciones: [{ texto: ">> REINICIAR CASO", nodo_siguiente: "inicio", determinacion: 0 }]
         },
         "final_bueno": {
             personaje: "Ladrona Áurea:",
             texto: "Buena elección. Prepárate, detective... vamos a quemar el internet del 2026.",
-            imagen: "imagen2.jpg",
-            opciones: [
-                { texto: ">> JUGAR DE NUEVO", nodo_siguiente: "inicio", determinacion: 0 }
-            ]
+            imagen: imagenesReales["final_bueno"],
+            opciones: [{ texto: ">> JUGAR DE NUEVO", nodo_siguiente: "inicio", determinacion: 0 }]
         },
         "final_malo": {
             personaje: "Ladrona Áurea:",
             texto: "Qué decepción. Adiós, detective.",
-            imagen: "imagen1.jpg",
-            opciones: [
-                { texto: ">> (Ella desaparece en la niebla) - REINICIAR", nodo_siguiente: "inicio", determinacion: 0 }
-            ]
+            imagen: imagenesReales["final_malo"],
+            opciones: [{ texto: ">> REINICIAR", nodo_siguiente: "inicio", determinacion: 0 }]
         }
     };
-    
-    function actualizarBarraDeterminacion() {
-        const barra = document.getElementById('determinacionBar');
-        if (barra) barra.value = Math.min(100, Math.max(0, determinacion));
-    }
-    
-    function modificarDeterminacion(cambio) {
-        determinacion += cambio;
-        determinacion = Math.min(100, Math.max(0, determinacion));
-        actualizarBarraDeterminacion();
-        // Si la determinación llega a 0, podrías forzar un final secreto (opcional)
-        if (determinacion <= 0) {
-            // (Podrías redirigir a un nodo "fracaso" si lo deseas)
-        }
-    }
-    
-    // Animación de máquina de escribir
-    function escribirTexto(elemento, textoCompleto, velocidad = 25, callback) {
-        if (animacionTimeout) clearTimeout(animacionTimeout);
+
+    function escribirTexto(elemento, texto, velocidad = 25, callback) {
+        if(animacionTimeout) clearTimeout(animacionTimeout);
         elemento.innerHTML = "";
         let i = 0;
-        function escribir() {
-            if (i < textoCompleto.length) {
-                elemento.innerHTML += textoCompleto.charAt(i);
-                i++;
-                animacionTimeout = setTimeout(escribir, velocidad);
-            } else {
-                if (callback) callback();
+        function escribir() { 
+            if(i < texto.length) { 
+                elemento.innerHTML += texto.charAt(i); 
+                i++; 
+                animacionTimeout = setTimeout(escribir, velocidad); 
+            } else if(callback) {
+                callback();
             }
         }
         escribir();
     }
-    
+
     function cargarEscena(idEscena) {
-        // Activar sonido por primera vez si el usuario hace clic (se llama desde botón)
-        if (!soundInitialized) enableSoundOnUserGesture();
-        
-        // Sonido de transición (menos al inicio)
-        if (idEscena !== "inicio") playTransitionSound();
-        
+        if(!soundInitialized) enableSoundOnUserGesture();
+        if(idEscena !== currentSceneId) playTransitionSound();
+        currentSceneId = idEscena;
         const escena = historia[idEscena];
-        if (!escena) return;
+        if(!escena) return;
         
-        // Cambiar imagen / GIF
         const imgElement = document.getElementById('pantalla-imagen');
-        if (escena.imagen && (escena.imagen.includes('.') )) {
+        imgElement.classList.add('fade-transition');
+        setTimeout(() => {
             imgElement.src = escena.imagen;
-        } else {
-            imgElement.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='350'%3E%3Crect width='100%25' height='100%25' fill='%23111'/%3E%3C/svg%3E";
+            setTimeout(() => imgElement.classList.remove('fade-transition'), 50);
+        }, 180);
+        
+        document.getElementById('pantalla-personaje').innerText = escena.personaje;
+        escribirTexto(document.getElementById('pantalla-dialogo'), escena.texto, 22);
+        
+        const caja = document.getElementById('pantalla-opciones');
+        caja.innerHTML = '';
+        escena.opciones.forEach(op => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.innerText = op.texto;
+            btn.onclick = () => {
+                playClickSound();
+                if(op.determinacion) modificarDeterminacion(op.determinacion);
+                cargarEscena(op.nodo_siguiente);
+            };
+            caja.appendChild(btn);
+        });
+        
+        limpiarInteractivos();
+        crearHotspots(idEscena);
+        
+        if(idEscena === "encuentro" && unidadObtenida) {
+            crearObjetoArrastrable("encuentro");
         }
         
-        // Mostrar nombre
-        document.getElementById('pantalla-personaje').innerText = escena.personaje;
-        
-        // Efecto máquina de escribir
-        const dialogoDiv = document.getElementById('pantalla-dialogo');
-        escribirTexto(dialogoDiv, escena.texto, 25);
-        
-        // Generar botones
-        const cajaOpciones = document.getElementById('pantalla-opciones');
-        cajaOpciones.innerHTML = '';
-        
-        escena.opciones.forEach(opcion => {
-            const boton = document.createElement('button');
-            boton.className = 'choice-btn';
-            boton.innerText = opcion.texto;
-            boton.onclick = (e) => {
-                e.stopPropagation();
-                // Sonido de clic
-                playClickSound();
-                // Modificar determinación si tiene campo
-                if (opcion.determinacion !== undefined) {
-                    modificarDeterminacion(opcion.determinacion);
-                }
-                // Cargar siguiente escena
-                cargarEscena(opcion.nodo_siguiente);
-            };
-            cajaOpciones.appendChild(boton);
-        });
+        // La polilla aparece en todas las escenas (es nuestra mascota)
+        crearPolillaMascota();
     }
-    
-    // Reiniciar partida (determinación a 50, empezar desde inicio)
+
     function reiniciarJuego() {
         determinacion = 50;
+        unidadObtenida = false;
         actualizarBarraDeterminacion();
         cargarEscena("inicio");
     }
-    
-    // Eventos y botón mute
-    document.getElementById('muteButton').addEventListener('click', () => {
-        if (!audioCtx) initAudio();
-        setMuted(!isMuted);
-        // Si estaba silenciado y no hay sonido aún, forzar activación
-        if (!soundInitialized && !isMuted) {
-            enableSoundOnUserGesture();
-        }
+
+    // ==========================================
+    // EVENTOS E INICIALIZACIÓN
+    // ==========================================
+    document.getElementById('btn1').addEventListener('click', function() {
+        playClickSound();
+        modificarDeterminacion(10);
+        cargarEscena('encuentro');
     });
     
-    document.getElementById('reiniciarBtn').addEventListener('click', (e) => {
-        e.preventDefault();
+    document.getElementById('btn2').addEventListener('click', function() {
+        playClickSound();
+        modificarDeterminacion(-5);
+        cargarEscena('emboscada');
+    });
+    
+    document.getElementById('reiniciarBtn').addEventListener('click', function() {
+        playClickSound();
         reiniciarJuego();
-        playClickSound(); // feedback
     });
     
-    // Precargar audio al primer clic en cualquier parte del juego (para cumplir normativa)
-    document.body.addEventListener('click', function firstClick() {
-        if (!soundInitialized) {
-            enableSoundOnUserGesture();
-            // Iniciar ambiente loop (solo una vez)
-            if (audioCtx && !isMuted && ambientGain) {
-                // El ambiente ya está sonando desde initAudio, pero gain está conectado.
-                // Aseguramos que el gain no esté a 0 si no mute
-                if (!isMuted) ambientGain.gain.value = 0.25;
-            }
-            document.body.removeEventListener('click', firstClick);
-        }
+    document.getElementById('muteButton').addEventListener('click', function() { 
+        if(!audioCtx) initAudio(); 
+        setMuted(!isMuted); 
+        if(!soundInitialized && !isMuted) enableSoundOnUserGesture(); 
     });
     
-    // Inicializar juego
-    window.onload = () => {
-        actualizarBarraDeterminacion();
-        cargarEscena("inicio");
-        initAudio();   // Prepara el contexto pero no lo activa hasta gesto
-    };
+    document.body.addEventListener('click', function firstClick() { 
+        if(!soundInitialized) { 
+            enableSoundOnUserGesture(); 
+            if(audioCtx && !isMuted && ambientGain) ambientGain.gain.value = 0.25; 
+            document.body.removeEventListener('click', firstClick); 
+        } 
+    });
+    
+    iniciarParticulas();
+    actualizarBarraDeterminacion();
+    initAudio();
+    cargarEscena("inicio");  // Esto ya crea la polilla automáticamente
 </script>
 </body>
-  </html>
+    </html>
