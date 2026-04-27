@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>🎀 Hello Kitty Adventure - Modos Fácil & Difícil</title>
+    <title>🕵️‍♀️ El Misterio de la Ladrona Áurea</title>
     <style>
         * {
             margin: 0;
@@ -14,8 +14,8 @@
         }
 
         body {
-            background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
-            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI Emoji', cursive, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Courier New', 'Segoe UI', monospace, sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -24,15 +24,15 @@
             position: relative;
         }
 
-        /* ------ MENÚ PRINCIPAL (con brillitos) ------ */
+        /* ------ MENÚ PRINCIPAL ------ */
         .menu-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 220, 240, 0.96);
-            backdrop-filter: blur(3px);
+            background: rgba(15, 20, 40, 0.97);
+            backdrop-filter: blur(5px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -46,20 +46,20 @@
         }
 
         .menu-card {
-            background: rgba(255, 245, 250, 0.9);
-            border-radius: 80px 80px 60px 60px;
+            background: rgba(30, 35, 60, 0.95);
+            border-radius: 20px;
             padding: 30px 40px 50px;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(233, 30, 99, 0.3), inset 0 1px 2px rgba(255,255,255,0.8);
-            border: 3px solid #ff99bb;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255,255,255,0.1);
+            border: 3px solid #d4af37;
             max-width: 90vw;
             animation: floatGlow 3s infinite ease-in-out;
         }
 
         @keyframes floatGlow {
-            0% { transform: translateY(0px); box-shadow: 0 20px 40px rgba(233,30,99,0.3); }
-            50% { transform: translateY(-8px); box-shadow: 0 30px 50px rgba(233,30,99,0.5); }
-            100% { transform: translateY(0px); box-shadow: 0 20px 40px rgba(233,30,99,0.3); }
+            0% { transform: translateY(0px); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+            50% { transform: translateY(-8px); box-shadow: 0 30px 50px rgba(212,175,55,0.3); }
+            100% { transform: translateY(0px); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
         }
 
         .logo-area {
@@ -69,18 +69,18 @@
         .logo-img {
             max-width: 180px;
             border-radius: 50%;
-            background: white;
+            background: #1a1a2e;
             padding: 5px;
-            box-shadow: 0 0 0 4px #ff80ab, 0 0 0 8px #fff;
+            box-shadow: 0 0 0 4px #d4af37, 0 0 0 8px #1a1a2e;
         }
         h1 {
-            color: #e91e63;
-            text-shadow: 3px 3px 0 #fff, 5px 5px 0 #f8bbd0;
-            font-size: 2.2rem;
+            color: #d4af37;
+            text-shadow: 3px 3px 0 #000, 5px 5px 0 #333;
+            font-size: 2rem;
             margin: 15px 0 5px;
         }
         .sparkle-text {
-            background: linear-gradient(45deg, #ff99cc, #ff66b2);
+            background: linear-gradient(45deg, #d4af37, #f0e68c);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
@@ -93,31 +93,34 @@
             margin: 30px 0 20px;
         }
         .menu-btn {
-            background: linear-gradient(145deg, #ffb7c5, #ff6f91);
+            background: linear-gradient(145deg, #2c3e50, #1a252f);
             border: none;
             border-radius: 60px;
             padding: 14px 30px;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: bold;
             font-family: inherit;
-            color: white;
-            text-shadow: 2px 2px 0 #b0003a;
-            box-shadow: 0 8px 0 #b0003a, 0 5px 15px rgba(0,0,0,0.2);
+            color: #d4af37;
+            text-shadow: 1px 1px 0 #000;
+            box-shadow: 0 8px 0 #0f1519, 0 5px 15px rgba(0,0,0,0.4);
             cursor: pointer;
             transition: 0.07s linear;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
+            border: 2px solid #d4af37;
         }
         .menu-btn:active {
             transform: translateY(4px);
-            box-shadow: 0 4px 0 #b0003a;
+            box-shadow: 0 4px 0 #0f1519;
         }
         .sound-btn {
-            background: linear-gradient(145deg, #b39ddb, #7e57c2);
-            box-shadow: 0 8px 0 #5e35b1;
+            background: linear-gradient(145deg, #4a235a, #2e1437);
+            box-shadow: 0 8px 0 #1a0b1f;
             font-size: 1.2rem;
+            color: #e8daef;
+            border-color: #8e44ad;
         }
         .sparkles {
             position: absolute;
@@ -127,9 +130,9 @@
         }
         .sparkle {
             position: absolute;
-            background: radial-gradient(circle, #ffdd88, #ffaa66);
-            width: 6px;
-            height: 6px;
+            background: radial-gradient(circle, #d4af37, #b8860b);
+            width: 4px;
+            height: 4px;
             border-radius: 50%;
             opacity: 0;
             animation: twinkle 2s infinite;
@@ -153,16 +156,18 @@
             display: flex;
             gap: 15px;
             margin-bottom: 8px;
-            background: rgba(255,255,240,0.9);
+            background: rgba(20, 25, 45, 0.95);
             padding: 6px 20px;
             border-radius: 40px;
-            border: 2px solid #e91e63;
+            border: 2px solid #d4af37;
             font-weight: bold;
+            color: #d4af37;
+            font-size: 0.95rem;
         }
         canvas {
             border-radius: 20px;
-            border: 5px solid #ff80ab;
-            box-shadow: 0 10px 25px rgba(233,30,99,0.4);
+            border: 5px solid #d4af37;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
             max-width: 95vw;
             max-height: 55vh;
         }
@@ -174,30 +179,33 @@
             gap: 8px;
         }
         .btn {
-            background: #ff80ab;
+            background: #2c3e50;
             border: none;
             border-radius: 50%;
             font-size: 1.8rem;
-            box-shadow: 0 4px 0 #ad1457;
+            box-shadow: 0 4px 0 #0f1519;
             transition: 0.05s linear;
             cursor: pointer;
-            color: white;
+            color: #d4af37;
+            border: 2px solid #d4af37;
         }
         .btn:active { transform: translateY(3px); box-shadow: none; }
-        .btn-jump { background: #42a5f5; box-shadow: 0 4px 0 #0d47a1; }
-        .btn-run { background: #ffca28; color: #5d4037; }
+        .btn-jump { background: #1a5276; box-shadow: 0 4px 0 #0d2b3e; }
+        .btn-run { background: #7d3c98; color: #f5eef8; }
         .info {
             margin-top: 8px;
             font-size: 0.7rem;
-            background: #ffe0e7;
+            background: rgba(30, 35, 60, 0.9);
             padding: 4px 12px;
             border-radius: 50px;
+            color: #d4af37;
+            border: 1px solid #d4af37;
         }
         .overlay {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(255,235,245,0.95);
+            background: rgba(15, 20, 40, 0.95);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -207,51 +215,141 @@
         }
         .overlay.hidden { display: none; }
         .overlay button {
-            background: #ff6f91;
-            border: none;
+            background: linear-gradient(145deg, #2c3e50, #1a252f);
+            border: 2px solid #d4af37;
             padding: 10px 30px;
             border-radius: 40px;
             font-size: 1.2rem;
             margin-top: 15px;
-            color: white;
+            color: #d4af37;
             font-weight: bold;
-            box-shadow: 0 4px 0 #a03e5a;
+            box-shadow: 0 4px 0 #0f1519;
+            cursor: pointer;
+        }
+
+        /* ------ BURBUJAS DE DIÁLOGO ------ */
+        .bubble-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 300;
+            transition: opacity 0.3s;
+        }
+        .bubble-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .speech-bubble {
+            background: #fff;
+            border-radius: 20px;
+            padding: 25px 35px;
+            max-width: 80vw;
+            min-width: 280px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 3px solid #d4af37;
+            animation: popIn 0.3s ease-out;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 15px 15px 0;
+            border-style: solid;
+            border-color: #d4af37 transparent transparent transparent;
+        }
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -11px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 12px 12px 0;
+            border-style: solid;
+            border-color: #fff transparent transparent transparent;
+            z-index: 1;
+        }
+        .bubble-avatar {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        .bubble-text {
+            color: #1a1a2e;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        .bubble-btn {
+            margin-top: 15px;
+            background: #d4af37;
+            color: #1a1a2e;
+            border: none;
+            padding: 8px 25px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #b8860b;
+        }
+        .bubble-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #b8860b;
         }
     </style>
 </head>
 <body>
 
-<!-- ==================== MENÚ PRINCIPAL CON BRILLITOS ==================== -->
+<!-- ==================== MENÚ PRINCIPAL ==================== -->
 <div id="mainMenu" class="menu-overlay">
     <div class="menu-card">
         <div class="logo-area">
-            <!-- ⚠️ CAMBIA AQUÍ TU URL DEL LOGO (imagen 1) -->
             <img id="customLogo" src="" alt="logo" class="logo-img" style="display:none;">
-            <span id="fallbackLogo" class="sparkle-text">🎀 HELLO KITTY 🎀</span>
+            <span id="fallbackLogo" class="sparkle-text">🕵️‍♀️ DETECTIVE 🕵️‍♀️</span>
         </div>
-        <h1>Adventure<br><span style="font-size:1.2rem;">Fácil ★ Difícil</span></h1>
+        <h1>El Misterio de<br>la Ladrona Áurea<br><span style="font-size:1.2rem;">Novato ★ Experto</span></h1>
         <div class="menu-buttons">
-            <button id="easyModeBtn" class="menu-btn">🌸 Modo Fácil</button>
-            <button id="hardModeBtn" class="menu-btn">⭐ Modo Difícil</button>
+            <button id="easyModeBtn" class="menu-btn">🔍 Modo Novato</button>
+            <button id="hardModeBtn" class="menu-btn">🌙 Modo Experto</button>
             <button id="menuMuteBtn" class="menu-btn sound-btn">🔊 Música: ON</button>
         </div>
         <div class="sparkles" id="sparklesContainer"></div>
     </div>
 </div>
 
+<!-- ==================== BURBUJA DE DIÁLOGO ==================== -->
+<div id="bubbleOverlay" class="bubble-overlay hidden">
+    <div class="speech-bubble">
+        <div class="bubble-avatar" id="bubbleAvatar">🕵️‍♀️</div>
+        <div class="bubble-text" id="bubbleText">¡Bienvenida, detective!</div>
+        <button class="bubble-btn" id="bubbleBtn" onclick="nextBubble()">Continuar →</button>
+    </div>
+</div>
+
 <!-- ==================== CONTENEDOR DEL JUEGO ==================== -->
 <div id="gameContainer" style="display: none;">
     <div class="hud">
-        <span>🍎 <span id="score">0</span></span>
-        <span>🏆 Nivel <span id="level">1</span></span>
+        <span>🔍 <span id="score">0</span></span>
+        <span>🏆 Caso <span id="level">1</span></span>
         <span>❤️ <span id="lives">3</span></span>
         <span>🎵 <span id="musicStatus">🔊</span></span>
     </div>
     <div class="canvas-wrapper">
         <canvas id="gameCanvas" width="700" height="420"></canvas>
         <div id="gameOverOverlay" class="overlay hidden">
-            <h2 id="goTitle">💔 Game Over</h2>
-            <p id="goText">Puntuación: 0</p>
+            <h2 id="goTitle">💔 Caso Cerrado</h2>
+            <p id="goText">Pistas encontradas: 0</p>
             <button onclick="restartGame()">🔄 Reintentar</button>
             <button onclick="backToMenu()">🏠 Menú</button>
         </div>
@@ -268,37 +366,28 @@
 </div>
 
 <script>
-    // ==================== CONFIGURACIÓN DE IMÁGENES Y SONIDOS (CAMBIA AQUÍ TUS URLs) ====================
-    // 💖 7 IMÁGENES PERSONALIZABLES 💖
+    // ==================== CONFIGURACIÓN DE IMÁGENES Y SONIDOS ====================
     const ASSETS = {
-        // ⚠️ 1. Personaje Hello Kitty (si no se carga, usa pixel art interno)
-        kittyImg: "",      // Ej: "img/kitty.png"
-        // ⚠️ 2. Manzana
-        appleImg: "",
-        // ⚠️ 3. Enemigo Slime
-        enemySlimeImg: "",
-        // ⚠️ 4. Enemigo Murciélago
-        enemyBatImg: "",
-        // ⚠️ 5. Enemigo Fantasma
-        enemyGhostImg: "",
-        // ⚠️ 6. Fondo (reemplaza el degradado)
+        detectiveImg: "",
+        pistaImg: "",
+        ladrónSlimeImg: "",
+        ladrónBatImg: "",
+        ladrónGhostImg: "",
         backgroundImg: "",
-        // ⚠️ 7. Logo del menú
         logoImg: ""
     };
 
-    // 🔊 5 SONIDOS PERSONALIZABLES (si están vacíos usa synth Web Audio)
     const SOUNDS = {
-        jump: "",    // ej: "sounds/jump.mp3"
+        jump: "",
         coin: "",
         hurt: "",
         win: "",
-        bgMusic: ""  // si pones ruta, se reproduce en bucle; si no, melodía procedural
+        bgMusic: ""
     };
 
-    // ==================== VARIABLES GLOBALES DEL JUEGO ====================
-    let currentDifficulty = null;  // 'easy' o 'hard'
-    let gameState = 'menu';        // menu, playing, gameover
+    // ==================== VARIABLES GLOBALES ====================
+    let currentDifficulty = null;
+    let gameState = 'menu';
     let score = 0, level = 1, lives = 3;
     let frameCount = 0;
     let musicEnabled = true;
@@ -306,25 +395,41 @@
     let melodyInterval = null;
     let currentLevelData = null;
     let enemies = [], particles = [];
-    let kittyLoaded = false, appleLoaded = false, bgLoaded = false;
-    let customKittyImg = new Image();
-    let customAppleImg = new Image();
+    let detectiveLoaded = false, pistaLoaded = false, bgLoaded = false;
+    let customDetectiveImg = new Image();
+    let customPistaImg = new Image();
     let customBgImg = new Image();
     let customSlimeImg = new Image(), customBatImg = new Image(), customGhostImg = new Image();
     let logoImgElem = new Image();
 
-    // Player
     let player = {
         x: 60, y: 200, vx: 0, vy: 0, width: 36, height: 40,
         onGround: false, facingRight: true, invincible: 0
     };
 
-    // Controles táctiles + teclado
     const keys = {}, touch = {};
-    // Configuración de dificultad (se setea al iniciar)
     let config = {};
 
-    // ==================== NIVELES (los originales) ====================
+    // ==================== DIÁLOGOS POR NIVEL ====================
+    const levelBubbles = {
+        1: [
+            { avatar: "🕵️‍♀️", text: "Detective: El rastro de la Ladrona Áurea me trajo a este bosque neblinoso. Dicen que roba secretos, no joyas..." },
+            { avatar: "🕵️‍♀️", text: "De repente, escucho un crujido entre los pinos. ¡Debo encontrar las pistas antes de que escape!" }
+        ],
+        2: [
+            { avatar: "🕵️‍♀️", text: "La Ladrona Áurea dejó más pistas en la ciudad. Los cómplices la protegen..." },
+            { avatar: "🕵️‍♀️", text: "¡Cuidado con los ladrones! Recoge todas las pistas para atraparla." }
+        ],
+        3: [
+            { avatar: "🕵️‍♀️", text: "Estoy cerca... La guarida de la Ladrona Áurea está justo delante." },
+            { avatar: "🕵️‍♀️", text: "¡Esta es la última oportunidad! No dejes que escape con los secretos." }
+        ]
+    };
+
+    let currentBubbles = [];
+    let bubbleIndex = 0;
+
+    // ==================== NIVELES ====================
     const levelsEasy = [
         { platforms: [{x:0,y:380,w:700,h:40},{x:180,y:310,w:160,h:20},{x:420,y:260,w:160,h:20},{x:80,y:200,w:140,h:20},{x:520,y:170,w:140,h:20},{x:280,y:120,w:140,h:20}],
           apples: [{x:240,y:270,collected:false},{x:480,y:220,collected:false},{x:130,y:160,collected:false},{x:580,y:130,collected:false},{x:330,y:80,collected:false}],
@@ -348,7 +453,7 @@
           spikes: [{x:90,y:360,w:610}], enemies: [{platIndex:1,offset:0.3},{platIndex:3,offset:0.6},{platIndex:5,offset:0.2},{platIndex:7,offset:0.7},{platIndex:8,offset:0.4}], goal:{x:640,y:340} }
     ];
 
-    // ==================== FUNCIONES DE SONIDO (híbrido: personalizado o sintetizador) ====================
+    // ==================== FUNCIONES DE SONIDO ====================
     function playCustomSound(type) {
         if (!musicEnabled) return;
         let url = SOUNDS[type];
@@ -357,20 +462,18 @@
             audio.volume = 0.3;
             audio.play().catch(e=>console.log("error audio",e));
         } else {
-            // fallback procedural
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (audioCtx.state === 'suspended') audioCtx.resume();
             const now = audioCtx.currentTime;
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            if (type === 'jump') { osc.frequency.value = 300; gain.gain.setValueAtTime(0.1,now); gain.gain.exponentialRampToValueAtTime(0.001,now+0.2); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(now+0.2); }
-            else if (type === 'coin') { osc.frequency.value = 880; gain.gain.setValueAtTime(0.12,now); gain.gain.exponentialRampToValueAtTime(0.001,now+0.15); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(now+0.15); }
-            else if (type === 'hurt') { osc.frequency.value = 200; gain.gain.setValueAtTime(0.15,now); gain.gain.exponentialRampToValueAtTime(0.001,now+0.3); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(now+0.3); }
-            else if (type === 'win') { [523,659,784].forEach((f,i)=> setTimeout(()=>{ let o=audioCtx.createOscillator(); o.frequency.value=f; let g=audioCtx.createGain(); g.gain.setValueAtTime(0.1,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.3); o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+0.3); },i*120)); }
+            if (type === 'jump') { osc.frequency.value = 250; gain.gain.setValueAtTime(0.1,now); gain.gain.exponentialRampToValueAtTime(0.001,now+0.2); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(now+0.2); }
+            else if (type === 'coin') { osc.frequency.value = 700; gain.gain.setValueAtTime(0.12,now); gain.gain.exponentialRampToValueAtTime(0.001,now+0.15); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(now+0.15); }
+            else if (type === 'hurt') { osc.frequency.value = 150; gain.gain.setValueAtTime(0.15,now); gain.gain.exponentialRampToValueAtTime(0.001,now+0.3); osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(now+0.3); }
+            else if (type === 'win') { [440,554,659].forEach((f,i)=> setTimeout(()=>{ let o=audioCtx.createOscillator(); o.frequency.value=f; let g=audioCtx.createGain(); g.gain.setValueAtTime(0.1,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+0.3); o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+0.3); },i*120)); }
         }
     }
 
-    // Música procedural o personalizada (si hay bgMusic)
     let bgAudio = null;
     function startBackgroundMusic() {
         if (!musicEnabled) return;
@@ -381,17 +484,16 @@
             bgAudio.volume = 0.2;
             bgAudio.play().catch(e=>console.log);
         } else {
-            // melodía procedural (simple)
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (audioCtx.state === 'suspended') audioCtx.resume();
             let idx = 0;
-            const melody = [523.25,587.33,659.25,698.46,659.25,587.33,523.25];
+            const melody = [220,261,293,329,293,261,220];
             if (melodyInterval) clearInterval(melodyInterval);
             melodyInterval = setInterval(()=>{
                 if (!musicEnabled || gameState !== 'playing') return;
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
-                osc.type = 'square';
+                osc.type = 'sine';
                 osc.frequency.value = melody[idx%melody.length];
                 gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.25);
@@ -403,59 +505,125 @@
     }
     function stopBackgroundMusic() { if (bgAudio) { bgAudio.pause(); bgAudio.currentTime=0; } if (melodyInterval) clearInterval(melodyInterval); }
 
-    // ==================== CARGA DE IMÁGENES PERSONALIZADAS ====================
+    // ==================== CARGA DE IMÁGENES ====================
     function loadCustomImages() {
-        if (ASSETS.kittyImg) { customKittyImg.src = ASSETS.kittyImg; customKittyImg.onload = ()=>kittyLoaded=true; }
-        if (ASSETS.appleImg) { customAppleImg.src = ASSETS.appleImg; customAppleImg.onload = ()=>appleLoaded=true; }
+        if (ASSETS.detectiveImg) { customDetectiveImg.src = ASSETS.detectiveImg; customDetectiveImg.onload = ()=>detectiveLoaded=true; }
+        if (ASSETS.pistaImg) { customPistaImg.src = ASSETS.pistaImg; customPistaImg.onload = ()=>pistaLoaded=true; }
         if (ASSETS.backgroundImg) { customBgImg.src = ASSETS.backgroundImg; customBgImg.onload = ()=>bgLoaded=true; }
-        if (ASSETS.enemySlimeImg) customSlimeImg.src = ASSETS.enemySlimeImg;
-        if (ASSETS.enemyBatImg) customBatImg.src = ASSETS.enemyBatImg;
-        if (ASSETS.enemyGhostImg) customGhostImg.src = ASSETS.enemyGhostImg;
+        if (ASSETS.ladrónSlimeImg) customSlimeImg.src = ASSETS.ladrónSlimeImg;
+        if (ASSETS.ladrónBatImg) customBatImg.src = ASSETS.ladrónBatImg;
+        if (ASSETS.ladrónGhostImg) customGhostImg.src = ASSETS.ladrónGhostImg;
         if (ASSETS.logoImg) { logoImgElem.src = ASSETS.logoImg; logoImgElem.onload = ()=>{ document.getElementById('fallbackLogo').style.display='none'; document.getElementById('customLogo').style.display='inline-block'; document.getElementById('customLogo').src=ASSETS.logoImg; }; }
         else { document.getElementById('customLogo').style.display='none'; }
     }
 
-    // ==================== DIBUJADO DE ELEMENTOS (con imágenes o pixel art) ====================
+    // ==================== DIBUJADO ====================
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    function drawKitty(x,y,w,h,right) {
-        if (kittyLoaded && customKittyImg.complete) {
+
+    function drawDetective(x,y,w,h,right) {
+        if (detectiveLoaded && customDetectiveImg.complete) {
             ctx.save();
-            if(!right){ ctx.translate(x+w,y); ctx.scale(-1,1); ctx.drawImage(customKittyImg,0,0,w,h); }
-            else ctx.drawImage(customKittyImg,x,y,w,h);
+            if(!right){ ctx.translate(x+w,y); ctx.scale(-1,1); ctx.drawImage(customDetectiveImg,0,0,w,h); }
+            else ctx.drawImage(customDetectiveImg,x,y,w,h);
             ctx.restore();
         } else {
-            // pixel art simple
-            ctx.fillStyle = '#fff0f5'; ctx.fillRect(x+4,y+4,w-8,h-8);
-            ctx.fillStyle = '#000'; ctx.fillRect(x+10,y+12,4,4); ctx.fillRect(x+w-14,y+12,4,4);
-            ctx.fillStyle = '#ff69b4'; ctx.fillRect(x+12,y+25,12,8);
+            // Pixel art detective
+            ctx.fillStyle = '#2c3e50'; ctx.fillRect(x+4,y+4,w-8,h-8);
+            ctx.fillStyle = '#d4af37'; ctx.fillRect(x+8,y+4,w-16,6);
+            ctx.fillStyle = '#f5c6a5'; ctx.fillRect(x+10,y+14,16,12);
+            ctx.fillStyle = '#000'; ctx.fillRect(x+12,y+16,3,3); ctx.fillRect(x+w-15,y+16,3,3);
+            ctx.fillStyle = '#8b4513'; ctx.fillRect(x+10,y+8,16,6);
+            ctx.fillStyle = '#d4af37'; ctx.fillRect(x+14,y+28,8,4);
         }
     }
-    function drawApple(ax,ay, bounce) {
-        if (appleLoaded && customAppleImg.complete) ctx.drawImage(customAppleImg, ax, ay+bounce, 20,20);
-        else { ctx.fillStyle = '#ff4444'; ctx.beginPath(); ctx.arc(ax+10, ay+12+bounce, 8,0,Math.PI*2); ctx.fill(); ctx.fillStyle = '#32CD32'; ctx.fillRect(ax+12, ay+4+bounce,4,8); }
+
+    function drawPista(ax,ay, bounce) {
+        if (pistaLoaded && customPistaImg.complete) ctx.drawImage(customPistaImg, ax, ay+bounce, 20,20);
+        else {
+            ctx.fillStyle = '#d4af37';
+            ctx.beginPath();
+            ctx.arc(ax+10, ay+12+bounce, 8,0,Math.PI*2);
+            ctx.fill();
+            ctx.fillStyle = '#1a1a2e';
+            ctx.font = 'bold 10px monospace';
+            ctx.fillText('?', ax+7, ay+16+bounce);
+        }
     }
+
     function drawEnemy(e, x,y,w,h) {
         let img = null;
         if (e.type===0) img = customSlimeImg;
         else if(e.type===1) img = customBatImg;
         else img = customGhostImg;
         if (img && img.complete) ctx.drawImage(img, x, y, w, h);
-        else { // fallback color
-            ctx.fillStyle = e.type===0?'#4CAF50':(e.type===1?'#9C27B0':'#42A5F5');
+        else {
+            ctx.fillStyle = e.type===0?'#c0392b':(e.type===1?'#8e44ad':'#2c3e50');
             ctx.fillRect(x+2,y+2,w-4,h-4);
-        }
-    }
-    function drawBackground() {
-        if (bgLoaded && customBgImg.complete) ctx.drawImage(customBgImg,0,0,canvas.width,canvas.height);
-        else { // gradiente
-            let grad = ctx.createLinearGradient(0,0,0,canvas.height);
-            grad.addColorStop(0,'#87CEEB'); grad.addColorStop(0.6,'#E0F6FF'); grad.addColorStop(0.6,'#90EE90'); grad.addColorStop(1,'#228B22');
-            ctx.fillStyle=grad; ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = '#fff';
+            ctx.font = '12px monospace';
+            ctx.fillText(e.type===0?'🦹':(e.type===1?'🦇':'👻'), x+4, y+18);
         }
     }
 
-    // ==================== LÓGICA PRINCIPAL DEL JUEGO ====================
+    function drawBackground() {
+        if (bgLoaded && customBgImg.complete) ctx.drawImage(customBgImg,0,0,canvas.width,canvas.height);
+        else {
+            let grad = ctx.createLinearGradient(0,0,0,canvas.height);
+            grad.addColorStop(0,'#0f0f23'); grad.addColorStop(0.5,'#1a1a2e'); grad.addColorStop(0.5,'#16213e'); grad.addColorStop(1,'#0f3460');
+            ctx.fillStyle=grad; ctx.fillRect(0,0,canvas.width,canvas.height);
+            // Estrellas
+            ctx.fillStyle = '#fff';
+            for(let i=0;i<30;i++){
+                let sx = (i*47+13)%canvas.width;
+                let sy = (i*31+7)%(canvas.height/2);
+                ctx.fillRect(sx,sy,2,2);
+            }
+            // Luna
+            ctx.fillStyle = '#f0e68c';
+            ctx.beginPath();
+            ctx.arc(canvas.width-60, 50, 20, 0, Math.PI*2);
+            ctx.fill();
+        }
+    }
+
+    // ==================== BURBUJAS DE DIÁLOGO ====================
+    function showBubble(avatar, text) {
+        gameState = 'dialog';
+        document.getElementById('bubbleAvatar').textContent = avatar;
+        document.getElementById('bubbleText').textContent = text;
+        document.getElementById('bubbleOverlay').classList.remove('hidden');
+    }
+
+    function hideBubble() {
+        document.getElementById('bubbleOverlay').classList.add('hidden');
+    }
+
+    function nextBubble() {
+        bubbleIndex++;
+        if (bubbleIndex < currentBubbles.length) {
+            let b = currentBubbles[bubbleIndex];
+            showBubble(b.avatar, b.text);
+        } else {
+            hideBubble();
+            gameState = 'playing';
+            startBackgroundMusic();
+        }
+    }
+
+    function startLevelBubbles(lvl) {
+        let bubbles = levelBubbles[lvl];
+        if (bubbles && bubbles.length > 0) {
+            currentBubbles = bubbles;
+            bubbleIndex = 0;
+            showBubble(bubbles[0].avatar, bubbles[0].text);
+        } else {
+            gameState = 'playing';
+            startBackgroundMusic();
+        }
+    }
+
+    // ==================== LÓGICA PRINCIPAL ====================
     function loadLevel(lvl, diffConfig, levelSet) {
         level = lvl;
         const data = JSON.parse(JSON.stringify(levelSet[(lvl-1)%levelSet.length]));
@@ -489,13 +657,13 @@
         lives = config.lives;
         score = 0; level = 1;
         frameCount=0;
-        gameState='playing';
+        gameState='dialog';
         document.getElementById('mainMenu').classList.add('hidden');
         document.getElementById('gameContainer').style.display = 'flex';
         document.getElementById('gameOverOverlay').classList.add('hidden');
         updateHUD();
         loadLevel(1, config, config.levelSet);
-        startBackgroundMusic();
+        startLevelBubbles(1);
         if(audioCtx && audioCtx.state==='suspended') audioCtx.resume();
     }
 
@@ -509,13 +677,13 @@
     }
     function gameOver(won){
         gameState='gameover';
-        document.getElementById('goTitle').innerText=won?'🎉 Victoria!':'💔 Game Over';
-        document.getElementById('goText').innerText=`Puntuación: ${score}`;
+        document.getElementById('goTitle').innerText=won?'🎉 ¡Caso Resuelto!':'💔 Caso Cerrado';
+        document.getElementById('goText').innerText=`Pistas encontradas: ${score}`;
         document.getElementById('gameOverOverlay').classList.remove('hidden');
         stopBackgroundMusic();
     }
     function restartGame(){ startGame(currentDifficulty); }
-    function backToMenu(){ location.reload(); } // simple
+    function backToMenu(){ location.reload(); }
     function toggleMusicGlobal(){
         musicEnabled = !musicEnabled;
         document.getElementById('menuMuteBtn').innerHTML = musicEnabled ? '🔊 Música: ON' : '🔇 Música: OFF';
@@ -524,7 +692,6 @@
         else if(gameState==='playing') startBackgroundMusic();
     }
 
-    // Actualización de física y colisiones
     function updateGame() {
         if(gameState!=='playing') return;
         frameCount++;
@@ -565,7 +732,10 @@
                 if(!config.requireAllApples || allCollected){
                     playCustomSound('win');
                     if(level >= config.levelSet.length) gameOver(true);
-                    else loadLevel(level+1, config, config.levelSet);
+                    else {
+                        loadLevel(level+1, config, config.levelSet);
+                        startLevelBubbles(level);
+                    }
                 }
             }
         }
@@ -575,19 +745,21 @@
         }
         if(player.invincible>0) player.invincible--;
     }
+
     function drawGame(){
         drawBackground();
         if(!currentLevelData) return;
-        currentLevelData.platforms.forEach(p=>{ ctx.fillStyle='#8B4513'; ctx.fillRect(p.x,p.y,p.w,p.h); ctx.fillStyle='#32CD32'; ctx.fillRect(p.x,p.y,p.w,6); });
-        currentLevelData.spikes.forEach(s=>{ ctx.fillStyle='#cc0000'; for(let i=0;i<s.w;i+=15){ ctx.beginPath(); ctx.moveTo(s.x+i,s.y+15); ctx.lineTo(s.x+i+7,s.y); ctx.lineTo(s.x+i+15,s.y+15); ctx.fill(); } });
-        currentLevelData.apples.forEach(a=>{ if(!a.collected){ let bounce=Math.sin(frameCount*0.1)*3; drawApple(a.x,a.y,bounce); } });
+        currentLevelData.platforms.forEach(p=>{ ctx.fillStyle='#5d4037'; ctx.fillRect(p.x,p.y,p.w,p.h); ctx.fillStyle='#2e7d32'; ctx.fillRect(p.x,p.y,p.w,6); });
+        currentLevelData.spikes.forEach(s=>{ ctx.fillStyle='#b71c1c'; for(let i=0;i<s.w;i+=15){ ctx.beginPath(); ctx.moveTo(s.x+i,s.y+15); ctx.lineTo(s.x+i+7,s.y); ctx.lineTo(s.x+i+15,s.y+15); ctx.fill(); } });
+        currentLevelData.apples.forEach(a=>{ if(!a.collected){ let bounce=Math.sin(frameCount*0.1)*3; drawPista(a.x,a.y,bounce); } });
         enemies.forEach(e=>e.draw());
-        let g=currentLevelData.goal; ctx.fillStyle='#FFD700'; ctx.fillRect(g.x+20,g.y,4,40); ctx.fillStyle='#ff69b4'; ctx.fillRect(g.x+24,g.y,2,20);
-        drawKitty(player.x,player.y,player.width,player.height,player.facingRight);
+        let g=currentLevelData.goal; ctx.fillStyle='#d4af37'; ctx.fillRect(g.x+20,g.y,4,40); ctx.fillStyle='#c0392b'; ctx.fillRect(g.x+24,g.y,2,20);
+        drawDetective(player.x,player.y,player.width,player.height,player.facingRight);
         let leftApples = currentLevelData.apples.filter(a=>!a.collected).length;
-        ctx.fillStyle='rgba(0,0,0,0.5)'; ctx.fillRect(canvas.width/2-100,8,200,24);
-        ctx.fillStyle='white'; ctx.font='bold 12px monospace'; ctx.fillText(`🍎 ${leftApples} restantes`, canvas.width/2-80,24);
+        ctx.fillStyle='rgba(0,0,0,0.6)'; ctx.fillRect(canvas.width/2-100,8,200,24);
+        ctx.fillStyle='#d4af37'; ctx.font='bold 12px monospace'; ctx.fillText(`🔍 ${leftApples} pistas restantes`, canvas.width/2-80,24);
     }
+
     function gameLoop(){ updateGame(); drawGame(); requestAnimationFrame(gameLoop); }
 
     // ==================== CONTROL TOUCH / TECLADO ====================
@@ -603,17 +775,16 @@
         window.addEventListener('keyup',e=>{ keys[e.code]=false; });
     }
 
-    // Inicialización del menú y eventos
+    // Inicialización
     window.onload = () => {
         loadCustomImages();
         attachControls();
         document.getElementById('easyModeBtn').onclick = () => startGame('easy');
         document.getElementById('hardModeBtn').onclick = () => startGame('hard');
         document.getElementById('menuMuteBtn').onclick = toggleMusicGlobal;
-        // brillitos
         for(let i=0;i<60;i++){ let s=document.createElement('div'); s.className='sparkle'; s.style.left=Math.random()*100+'%'; s.style.top=Math.random()*100+'%'; s.style.animationDelay=Math.random()*3+'s'; document.getElementById('sparklesContainer').appendChild(s); }
         gameLoop();
     };
 </script>
 </body>
-</html>
+    </html>
